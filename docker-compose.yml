@@ -1,0 +1,37 @@
+version: '3.6'
+services:
+  nginx:
+    build:
+      context: docker/dev
+      dockerfile: nginx.docker
+    volumes:
+      - ./app:/app
+    depends_on:
+      - php-fpm
+    ports:
+      - "8200:80"
+    networks:
+      - four
+  php-fpm:
+    build:
+      context: docker/dev
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./app:/app
+    networks:
+      - four
+  php-cli:
+    build:
+      context: docker/dev
+      dockerfile: php-cli.docker
+    volumes:
+      - ./app:/app
+      - composer:/root/.composer/cache
+    networks:
+      - four
+volumes:
+  composer:
+
+networks:
+  four:
+    driver: bridge
