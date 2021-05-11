@@ -1,7 +1,7 @@
 include .env
 
 up: docker-up
-init: docker-down-clear docker-pull docker-build docker-up
+init: docker-down-clear docker-pull docker-build docker-up composer-install
 
 docker-up:
 	docker-compose up -d
