@@ -1,4 +1,5 @@
 include .env
+
 up: docker-up
 init: docker-down-clear docker-pull docker-build docker-up
 
@@ -21,7 +22,7 @@ composer-install:
 	docker-compose run --rm php-cli composer install
 
 cli:
-	docker-compose run --rm php-cli php bin/app.php
+	docker-compose run --rm php-cli php app/bin/console.php
 
 build-production:
 	docker build --pull --file=docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
