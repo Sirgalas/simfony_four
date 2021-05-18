@@ -21,8 +21,27 @@ docker-build:
 composer-install:
 	docker-compose run --rm php-cli composer install
 
+composer-update:
+	docker-compose run --rm php-cli composer update
+
+add-controller:
+	docker-compose run --rm php-cli php bin/console make:controller
+
+add-entity:
+	docker-compose run --rm php-cli php bin/console make:entity
+
+add-crud:
+	docker-compose run --rm php-cli php bin/console make:crud
+
 cli:
 	docker-compose run --rm php-cli php app/bin/console.php
+
+migrate:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate
+
+diff:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff
+
 
 build-production:
 	docker build --pull --file=docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
@@ -35,9 +54,9 @@ push-production:
 	docker push ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
 
 deploy-production:
-	ssh ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
-	scp -P ${PRODUCTION_PORT} docker-compose-production.yml ${PRODUCTION_HOST}:docker-compose.yml
-	ssh ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
-	ssh ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
-	ssh ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
-	ssh ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
+	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
+	scp -o ${PRODUCTION_PORT} docker-compose-production.yml ${PRODUCTION_HOST}:docker-compose.yml
+	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
+	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
+	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
+	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
