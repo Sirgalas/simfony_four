@@ -43,6 +43,8 @@ diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff
 
 
+test:
+	docker-compose run --rm php-cli php ./vendor/bin/phpunit
 build-production:
 	docker build --pull --file=docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
 	docker build --pull --file=docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager
