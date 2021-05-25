@@ -36,7 +36,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('home') }}">Home</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('auth.signup') }}">Sign Up</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -44,10 +46,12 @@
     </header>
     <main role="main" class="flex-shrink-0">
         <div class="container">
+            {% block breadcrumbs %}{% endblock %}
+            {% include './includes/_flashes.html.twig' %}
             {% block body %}{% endblock %}
         </div>
     </main>
-    <footer class="footer mt-auto py-3">
+    <footer class="footer fixed-bottom mt-auto py-3">
         <div class="container">
             <span class="text-muted">App</span>
         </div>
