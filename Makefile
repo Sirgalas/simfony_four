@@ -37,7 +37,7 @@ cli:
 	docker-compose run --rm php-cli php app/bin/console.php
 
 migrate:
-	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
 diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff

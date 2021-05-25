@@ -31,4 +31,9 @@ class Id
         $this->value=$hash;
     }
 
+    public function __toString(): string
+    {
+        return $this->getValue();
+    }
+
 }

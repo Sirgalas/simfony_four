@@ -11,20 +11,9 @@ use App\Tests\Builder\User\UserBuilder;
 use PHPUnit\Framework\TestCase;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
-/**
- * Class AuthTest
- * @package App\Tests\Unit\Model\User\Entity\User\Network
- * @property User $user
- */
+
 class AuthTest extends TestCase
 {
-
-    private $user;
-
-    public function setUp(): void
-    {
-        $this->user=  $user = (new UserBuilder())->build();
-    }
 
     /**
      * @test
@@ -32,29 +21,19 @@ class AuthTest extends TestCase
     public function success():void
     {
 
-        $this->user->signUpByNetwork(
+        $user=User::signUpByNetwork(
+            $id = Id::next(),
+            $date = new \DateTimeImmutable(),
             $network='vk',
             $identity='0000001'
         );
-        self::assertTrue($this->user->isActive());
-
-        self::assertCount(1, $networks = $this->user->getNetworks());
+        self::assertTrue($user->isActive());
+        self::assertEquals($id, $user->getId());
+        self::assertEquals($date, $user->getDate());
+        self::assertCount(1, $networks = $user->getNetworks());
         self::assertInstanceOf(Network::class, $first = reset($networks));
         self::assertEquals($network, $first->getNetwork());
         self::assertEquals($identity, $first->getIdentity());
     }
 
-    /**
-     * @test
-     */
-    public function already():void
-    {
-
-        $this->user->signUpByNetwork(
-            $network='vk',
-            $identity='0000001'
-        );
-        $this->expectExceptionMessage('User is already signed up.');
-        $this->user->signUpByNetwork($network,$identity);
-    }
 }

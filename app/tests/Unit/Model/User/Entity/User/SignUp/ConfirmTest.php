@@ -12,27 +12,23 @@ use App\Model\User\Entity\User\User;
 /**
  * Class ConfirmTest
  * @package App\Tests\Unit\Model\User\Entity\User\SignUp
- * @property User $user
  */
 class ConfirmTest extends TestCase
 {
-    private $user;
-
-    public function setUp(): void
-    {
-        $this->user=  $user = (new UserBuilder())->viaEmail()->build();
-    }
 
     /**
      * @test
      */
     public function confirmSuccess():void
     {
-        $this->user->confirmSignup();
+        $user = (new UserBuilder())->viaEmail()->build();
 
-        self::assertTrue($this->user->isActive());
-        self::assertFalse($this->user->isWait());
-        self::assertNull($this->user->getConfirmToken());
+        $user->confirmSignUp();
+
+        self::assertFalse($user->isWait());
+        self::assertTrue($user->isActive());
+
+        self::assertNull($user->getConfirmToken());
     }
 
     /**
@@ -40,9 +36,11 @@ class ConfirmTest extends TestCase
      */
     public function confirmAlready():void
     {
-        $this->user->confirmSignup();
+        $user = (new UserBuilder())->viaEmail()->build();
+
+        $user->confirmSignUp();
         $this->expectExceptionMessage('User is already confirmed.');
-        $this->user->confirmSignup();
+        $user->confirmSignUp();
     }
 
 
