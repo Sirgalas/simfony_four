@@ -41,7 +41,7 @@ class SignUpController extends AbstractController
         if($form->isSubmitted()&&$form->isValid()){
             try {
                 $handler->handle($command);
-                $this->addFlash('success','Check your email.');
+                $this->addFlash('success',$this->translator->trans('Check your email.',[],'success'));
                 return $this->redirectToRoute('home');
             }catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception' => $e]);
@@ -64,7 +64,7 @@ class SignUpController extends AbstractController
         $command = new SignUp\Confirm\Command($token);
         try{
             $handler->handle($command);
-            $this->addFlash('success','Email is successfully confirmed');
+            $this->addFlash('success',$this->translator->trans('Email is successfully confirmed',[],'success'));
         }catch (\DomainException $exception){
             $this->logger->error($exception->getMessage(),['exception'=>$exception]);
             $this->addFlash('error',$this->translator->trans($exception->getMessage(),[],'exceptions'));

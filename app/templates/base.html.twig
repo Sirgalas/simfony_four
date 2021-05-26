@@ -33,12 +33,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('auth.signup') }}">Sign Up</a>
-                    </li>
+                    {% include './includes/_app_home_menu.html.twig' %}
                 </ul>
             </div>
         </div>
