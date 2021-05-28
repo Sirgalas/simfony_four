@@ -1,7 +1,9 @@
 include .env
 
 up: docker-up
-init: docker-down-clear docker-pull docker-build docker-up composer-install
+init: docker-down-clear docker-pull docker-build docker-up composer-install  manager-fixtures
+
+
 
 docker-up:
 	docker-compose up -d
@@ -38,6 +40,10 @@ cli:
 
 migrate:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
+
+
+manager-fixtures:
+	docker-compose run --rm manager-php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff

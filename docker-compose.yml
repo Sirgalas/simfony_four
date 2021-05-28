@@ -20,6 +20,7 @@ services:
       - ./app:/app
     depends_on:
       - db
+      - mailer
     networks:
       - four
   php-cli:
@@ -31,6 +32,7 @@ services:
       PHP_IDE_CONFIG: "serverName=Docker"
     depends_on:
       - db
+      - mailer
     volumes:
       - ./app:/app
       - composer:/root/.composer/cache
@@ -48,6 +50,10 @@ services:
       - "8201:5432"
     networks:
       - four
+  mailer:
+    image: mailhog/mailhog
+    ports:
+      - "8202:8025"
 
 volumes:
   db:

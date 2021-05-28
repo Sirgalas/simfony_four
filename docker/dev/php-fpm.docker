@@ -10,6 +10,17 @@ RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo_pgsql
 
+
+RUN apt-get update \
+  && apt-get install -y zlib1g-dev libicu-dev g++ \
+  && docker-php-ext-configure intl \
+  && docker-php-ext-install intl
+
+RUN docker-php-ext-install bcmath\
+    && docker-php-ext-configure bcmath
+
+
+
 COPY php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 
