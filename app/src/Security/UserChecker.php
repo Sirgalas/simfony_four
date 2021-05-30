@@ -32,7 +32,7 @@ class UserChecker implements \Symfony\Component\Security\Core\User\UserCheckerIn
      */
     public function checkPostAuth(UserInterface $user)
     {
-        if (!$identity instanceof UserIdentity) {
+        if (!$user instanceof UserIdentity) {
             return;
         }
     }

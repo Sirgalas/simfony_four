@@ -41,16 +41,15 @@ cli:
 migrate:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
-
 manager-fixtures:
 	docker-compose run --rm manager-php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff
 
-
 test:
 	docker-compose run --rm php-cli php ./vendor/bin/phpunit
+
 build-production:
 	docker build --pull --file=docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
 	docker build --pull --file=docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager
@@ -68,3 +67,4 @@ deploy-production:
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_OAUTH_FACEBOOK_SECRET=${MANAGER_OAUTH_FACEBOOK_SECRET}" >> .env'

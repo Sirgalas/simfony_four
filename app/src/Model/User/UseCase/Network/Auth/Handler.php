@@ -8,7 +8,7 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 
-class Handle
+class Handler
 {
     private $users;
     private $flusher;

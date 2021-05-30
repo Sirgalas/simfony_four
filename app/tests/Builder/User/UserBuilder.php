@@ -54,7 +54,6 @@ class UserBuilder
 
     public function build():User
     {
-
         if ($this->email) {
             $user=User::signUpByEmail(
                 $this->id,
@@ -66,6 +65,7 @@ class UserBuilder
             if ($this->confirmed) {
                 $user->confirmSignUp();
             }
+            return $user;
         }
         if ($this->network) {
             return User::signUpByNetwork(
