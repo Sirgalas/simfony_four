@@ -1,9 +1,16 @@
 include .env
 
 up: docker-up
-init: docker-down-clear docker-pull docker-build docker-up composer-install  manager-fixtures
+down: docker-down
+restart: docker-down docker-up
+restart-clear: docker-down docker-up
+init: docker-down-clear docker-build docker-up assets-install composer-install
+asset-init: assets-install assets-watch
 
+app-init: composer-install assets-install migrations fixtures
 
+clear:
+	docker run --rm -v ${PWD}/app:/app --workdir=/app alpine rm -f .ready
 
 docker-up:
 	docker-compose up -d
@@ -19,6 +26,18 @@ docker-pull:
 
 docker-build:
 	docker-compose build
+
+assets-install:
+	docker-compose run --rm node yarn install
+
+assets-dev:
+	docker-compose run --rm node npm run dev
+
+assets-watch:
+	docker-compose run --rm node npm run watch
+
+ready:
+	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine touch .ready
 
 composer-install:
 	docker-compose run --rm php-cli composer install
@@ -41,8 +60,8 @@ cli:
 migrate:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
-manager-fixtures:
-	docker-compose run --rm manager-php-cli php bin/console doctrine:fixtures:load --no-interaction
+fixtures:
+	docker-compose run --rm php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff

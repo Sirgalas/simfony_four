@@ -38,6 +38,17 @@ services:
       - composer:/root/.composer/cache
     networks:
       - four
+  node:
+    image: node:16.2-alpine
+    volumes:
+      - ./app:/app
+    working_dir: /app
+  node-watch:
+    image: node:11.13-alpine
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && npm run watch"
   db:
     image: postgres:13.2-alpine
     volumes:
