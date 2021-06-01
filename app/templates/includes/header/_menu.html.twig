@@ -1,0 +1,21 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('home') }}">Home</a>
+    </li>
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('test') }}">Test</a>
+    </li>
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('app_logout') }}">Log Out</a>
+    </li>
+{% else %}
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('auth.signup') }}">Sign Up</a>
+    </li>
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('auth.reset') }}">Reset</a>
+    </li>
+    <li class="c-header-nav-item px-3">
+        <a class="c-header-nav-link" href="{{ path('app_login') }}">Log In</a>
+    </li>
+{% endif %}

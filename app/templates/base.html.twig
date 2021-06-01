@@ -1,44 +1,36 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <div class="container">
-
-                    <a class="navbar-brand" href="{{ path('home') }}">App</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <ul class="navbar-nav ml-auto">
-                            {% include './includes/_app_home_menu.html.twig' %}
-                        </ul>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <!-- Custom styles for this template -->
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body class="c-app">
+    {% include 'includes/sidebar/_sidebar.html.twig' %}
+    <div class="c-wrapper c-fixed-components">
+        {% include 'includes/header/_header.html.twig' with {breadcrumbs: block('breadcrumbs')} %}
+        <div class="c-body">
+            <main class="c-main">
+                <div class="container-fluid">
+                    <div class="fade-in">
+                        {% include './includes/_flashes.html.twig' %}
+                        {% block body %}{% endblock %}
                     </div>
                 </div>
-            </nav>
-        </header>
-        <main role="main" class="flex-shrink-0">
-            <div class="container">
-                {% block breadcrumbs %}{% endblock %}
-                {% include './includes/_flashes.html.twig' %}
-                {% block body %}{% endblock %}
-            </div>
-        </main>
-        <footer class="footer fixed-bottom mt-auto py-3">
-            <div class="container">
-                <span class="text-muted">App</span>
-            </div>
-        </footer>
-    </body>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
+            </main>
+            <footer class="c-footer">
+                <div><a href="https://coreui.io">CoreUI</a> &copy; 2020 creativeLabs.</div>
+                <div class="ml-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
+            </footer>
+        </div>
+    </div>
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
 </html>

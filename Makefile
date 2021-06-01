@@ -6,7 +6,6 @@ restart: docker-down docker-up
 restart-clear: docker-down docker-up
 init: docker-down-clear docker-build docker-up assets-install composer-install
 asset-init: assets-install assets-watch
-
 app-init: composer-install assets-install migrations fixtures
 
 clear:
