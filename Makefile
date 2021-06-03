@@ -3,7 +3,7 @@ include .env
 up: docker-up
 down: docker-down
 restart: docker-down docker-up
-restart-clear: docker-down docker-up
+restart-clear: docker-down-clear docker-build docker-up
 init: docker-down-clear docker-build docker-up assets-install composer-install
 asset-init: assets-install assets-watch
 app-init: composer-install assets-install migrations fixtures
@@ -54,7 +54,10 @@ add-crud:
 	docker-compose run --rm php-cli php bin/console make:crud
 
 cli:
-	docker-compose run --rm php-cli php app/bin/console.php
+	docker-compose run --rm php-cli php app/bin/console
+
+cache-clear:
+	docker-compose run --rm php-cli php bin/console cache:clear
 
 migrate:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
@@ -69,14 +72,16 @@ test:
 	docker-compose run --rm php-cli php ./vendor/bin/phpunit
 
 build-production:
-	docker build --pull --file=docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
-	docker build --pull --file=docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager
-	docker build --pull --file=docker/php-cli.docker --tag ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG} manager
+	docker build --pull --file=./docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
+	docker build --pull --file=./docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager
+	docker build --pull --file=./docker/php-cli.docker --tag ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG} manager
+	docker build --pull --file=./docker/production/redis.docker --tag ${REGISTRY_ADDRESS}/redis:${IMAGE_TAG} manager
 
 push-production:
 	docker push ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
+	docker push ${REGISTRY_ADDRESS}/redis:${IMAGE_TAG}
 
 deploy-production:
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
@@ -85,4 +90,5 @@ deploy-production:
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_OAUTH_FACEBOOK_SECRET=${MANAGER_OAUTH_FACEBOOK_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> .env'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "OAUTH_FACEBOOK_SECRET=${OAUTH_FACEBOOK_SECRET}" >> .env'

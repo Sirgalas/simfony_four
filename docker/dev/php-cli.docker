@@ -5,6 +5,12 @@ RUN docker-php-ext-install zip
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
+COPY php/php.ini /usr/local/etc/php/php.ini
+RUN pear config-set php_ini /usr/local/etc/php/php.ini\
+&& pecl install xdebug-3.0.0 \
+&& echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+&& docker-php-ext-enable xdebug
+
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo_pgsql
@@ -13,6 +19,9 @@ RUN apt-get update \
   && apt-get install -y zlib1g-dev libicu-dev g++ \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl
+
+RUN pecl install redis \
+    && docker-php-ext-enable redis.so
 
 RUN docker-php-ext-install bcmath\
     && docker-php-ext-configure bcmath

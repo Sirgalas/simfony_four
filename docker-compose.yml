@@ -21,6 +21,7 @@ services:
     depends_on:
       - db
       - mailer
+      - redis
     networks:
       - four
   php-cli:
@@ -33,6 +34,7 @@ services:
     depends_on:
       - db
       - mailer
+      - redis
     volumes:
       - ./app:/app
       - composer:/root/.composer/cache
@@ -65,10 +67,22 @@ services:
     image: mailhog/mailhog
     ports:
       - "8202:8025"
-
+    networks:
+      - four
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "8203:6379"
+    volumes:
+      - ./docker/dev/redis:/data
+    command: redis-server --requirepass secret
+    networks:
+      - four
 volumes:
   db:
   composer:
+  redis:
 
 networks:
   four:

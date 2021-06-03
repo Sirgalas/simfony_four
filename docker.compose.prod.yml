@@ -11,19 +11,21 @@ services:
     image: ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG}
     restart: always
     environment:
-      APP_SECRET: ${MANAGER_APP_SECRET}
-      DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@postgres:5432/app
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
       MAILER_URL: null://localhost
-      OAUTH_FACEBOOK_SECRET: ${MANAGER_OAUTH_FACEBOOK_SECRET}
+      OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
+      REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
     depends_on:
       - postgres
   php-cli:
     image: ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
     environment:
-      APP_SECRET: ${MANAGER_APP_SECRET}
-      DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@postgres:5432/app
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
       MAILER_URL: null://localhost
-      OAUTH_FACEBOOK_SECRET: ${MANAGER_OAUTH_FACEBOOK_SECRET}
+      OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
+      REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
     depends_on:
       - postgres
   postgres:
@@ -33,12 +35,19 @@ services:
       - postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: app
-      POSTGRES_PASSWORD: ${MANAGER_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: app
   node:
     image: node:16.2-alpine
     volumes:
       - ./app:/app
     working_dir: /app
+  redis:
+    image: redis:6.0
+    restart: always
+    volumes:
+      - redis:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
 volumes:
   postgres:
+  redis:

@@ -16,6 +16,9 @@ RUN apt-get update \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl
 
+RUN pecl install redis \
+    && docker-php-ext-enable redis.so
+
 RUN docker-php-ext-install bcmath\
     && docker-php-ext-configure bcmath
 
