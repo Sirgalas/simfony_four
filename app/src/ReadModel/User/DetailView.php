@@ -6,10 +6,15 @@ namespace App\ReadModel\User;
 
 use App\ReadModel\AbstractCommand;
 
-class ShortView extends AbstractCommand
+class DetailView extends AbstractCommand
 {
     public $id;
+    public $date;
     public $email;
     public $role;
     public $status;
+    /**
+     * @var NetworkView[]
+     */
+    public $networks;
 }

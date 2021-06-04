@@ -75,12 +75,51 @@ class UserFetcher extends Fetcher
             ->where('email = :email')
             ->setParameter(':email', $email);
 
-         $stmt = $this->getStatement($qb);
+        $stmt = $this->getStatement($qb);
         $row = $stmt->fetchAssociative();
         if (false !== $row) {
             return new ShortView($row);
         }
 
         return null;
+    }
+    public function findDetail(string $id): ?DetailView
+    {
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'created_at',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->where('id = :id')
+            ->setParameter(':id', $id);
+
+        $stmt = $this->getStatement($qb);
+        $row = $stmt->fetchAssociative();
+
+        /** @var DetailView $view */
+        if (false !== $row) {
+            return new DetailView($row);
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('network', 'identity')
+            ->from('user_user_networks')
+            ->where('user_id = :id')
+            ->setParameter(':id', $id);
+
+        $stmt = $this->getStatement($qb);
+        $row = $stmt->fetchAssociative();
+
+        /** @var DetailView $view */
+        if (false !== $row) {
+            return new DetailView($row);
+        }
+
+        return $view;
     }
 }
