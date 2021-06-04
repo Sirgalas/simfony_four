@@ -47,6 +47,9 @@ composer-update:
 add-controller:
 	docker-compose run --rm php-cli php bin/console make:controller
 
+add-command:
+	docker-compose run --rm php-cli php bin/console make:command
+
 add-entity:
 	docker-compose run --rm php-cli php bin/console make:entity
 
@@ -54,7 +57,7 @@ add-crud:
 	docker-compose run --rm php-cli php bin/console make:crud
 
 cli:
-	docker-compose run --rm php-cli php app/bin/console
+	docker-compose run --rm php-cli php bin/console
 
 cache-clear:
 	docker-compose run --rm php-cli php bin/console cache:clear

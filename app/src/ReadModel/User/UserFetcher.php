@@ -51,13 +51,34 @@ class UserFetcher extends Fetcher
             ->innerJoin('u', 'user_user_networks', 'n', 'n.user_id = u.id')
             ->where('n.network = :network AND n.identity = :identity')
             ->setParameter(':network', $network)
-            ->setParameter(':identity', $identity)
-            ->execute();
+            ->setParameter(':identity', $identity);
 
         $stmt = $this->getStatement($qb);
         $row = $stmt->fetchAssociative();
         if (false !== $row) {
             return new AuthView($row);
+        }
+
+        return null;
+    }
+
+    public function findByEmail(string $email): ?ShortView
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->where('email = :email')
+            ->setParameter(':email', $email);
+
+         $stmt = $this->getStatement($qb);
+        $row = $stmt->fetchAssociative();
+        if (false !== $row) {
+            return new ShortView($row);
         }
 
         return null;
