@@ -8,7 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HomeTest extends WebTestCase
 {
-    public function testGuest(): void
+    /**
+     * @test
+     */
+    public function guest(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');
@@ -17,7 +20,7 @@ class HomeTest extends WebTestCase
         $this->assertSame('http://localhost/login', $client->getResponse()->headers->get('Location'));
     }
 
-    public function testSuccess(): void
+    public function success(): void
     {
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@app.test',
