@@ -79,7 +79,7 @@ services:
     ports:
       - "8203:6379"
     volumes:
-      - ./docker/dev/redis:/data
+      - redis:/data
     command: redis-server --requirepass secret
     networks:
       - four
