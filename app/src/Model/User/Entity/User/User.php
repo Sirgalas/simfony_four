@@ -44,7 +44,7 @@ class User
 
     /**
      * @var Email|null
-     * @ORM\Column(type="user_user_email", name="new_email", nullable=true)
+     * @ORM\Column(type="user_email", name="new_email", nullable=true)
      */
     private $newEmail;
     /**
@@ -118,7 +118,7 @@ class User
         return $user;
     }
 
-    private function attachNetwork(string $network, string $identity): void
+    public function attachNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
             if ($existing->isForNetwork($network)) {

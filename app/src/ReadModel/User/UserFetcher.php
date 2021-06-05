@@ -122,4 +122,20 @@ class UserFetcher extends Fetcher
 
         return $view;
     }
+
+    public function findBySignUpConfirmToken(string $token): ?ShortView
+    {
+        $qb=$this->connection->createQueryBuilder()
+            ->select('id','email','role','status')
+            ->from('user_users')
+            ->where('confirm_token = :token')
+            ->setParameter(':token',$token);
+        $stmt=$this->getStatement($qb);
+        $row=$stmt->fetchAssociative();
+        if (false !== $row) {
+            return new ShortView($row);
+        }
+
+        return null;
+    }
 }
