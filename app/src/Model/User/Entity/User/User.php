@@ -82,17 +82,24 @@ class User
      */
     private $created_at;
 
-    private function __construct(Id $id,\DateTimeImmutable $dateTimeImmutable)
+    /**
+     * @var Name
+     * @ORM\Embedded(class="Name")
+     */
+    private $name;
+
+    private function __construct(Id $id,\DateTimeImmutable $dateTimeImmutable, Name $name)
     {
         $this->setId($id);
         $this->setDate($dateTimeImmutable);
         $this->role = Role::user();
+        $this->name=$name;
         $this->setNetworks(new ArrayCollection());
     }
 
-    public static function signUpByEmail(Id $id,\DateTimeImmutable $date,Email $email, string $hash, string $token): self
+    public static function signUpByEmail(Id $id,\DateTimeImmutable $date,Name $name, Email $email, string $hash, string $token): self
     {
-        $user= new self($id,$date);
+        $user= new self($id,$date, $name);
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->confirmToken = $token;
@@ -110,9 +117,9 @@ class User
         $this->confirmToken = null;
     }
 
-    public static function signUpByNetwork(Id $id,\DateTimeImmutable $date,string $network, string $identity): self
+    public static function signUpByNetwork(Id $id,\DateTimeImmutable $date, Name $name, string $network, string $identity): self
     {
-        $user= new self($id,$date);
+        $user= new self($id,$date, $name);
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
         return $user;
@@ -126,6 +133,11 @@ class User
             }
         }
         $this->networks->add(new Network($this, $network, $identity));
+    }
+
+    public function changeName(Name $name): void
+    {
+        $this->name = $name;
     }
 
     public function requestPasswordReset(ResetToken  $token,\DateTimeImmutable $date):void
@@ -221,6 +233,13 @@ class User
     {
         return $this->created_at;
     }
+
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
+
 
     public function setDate(\DateTimeImmutable $dateTimeImmutable)
     {

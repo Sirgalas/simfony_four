@@ -34,47 +34,30 @@ class SignUpController extends AbstractController
     }
 
     /**
-     * @Route("/signup/{token}", name="auth.signup.confirm")
+     * @Route("/signup", name="auth.signup")
      * @param Request $request
-     * @param string $token
-     * @param SignUp\Confirm\ByToken\Handler $handler
-     * @param UserProviderInterface $userProvider
-     * @param GuardAuthenticatorHandler $guardHandler
-     * @param LoginFormAuthenticator $authenticator
+     * @param SignUp\Request\Handler $handler
      * @return Response
      */
-    public function request(
-        Request $request,
-        string $token,
-        SignUp\Confirm\ByToken\Handler $handler,
-        UserProviderInterface $userProvider,
-        GuardAuthenticatorHandler $guardHandler,
-        LoginFormAuthenticator $authenticator
-    ):Response
+    public function request(Request $request, SignUp\Request\Handler $handler): Response
     {
-        if (!$user = $this->users->findBySignUpConfirmToken($token)) {
-            $this->addFlash('error', 'Incorrect or already confirmed token.');
-            return $this->redirectToRoute('auth.signup');
-        }
-        $command = new SignUp\Confirm\ByToken\Command($token);
-        $form = $this->createForm(SignUp\Request\Form::class,$command);
+        $command = new SignUp\Request\Command();
+
+        $form = $this->createForm(SignUp\Request\Form::class, $command);
         $form->handleRequest($request);
-        if($form->isSubmitted()&&$form->isValid()){
+
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $userProvider->loadUserByUsername($user->email),
-                    $request,
-                    $authenticator,
-                    'main'//из config/packages/security.yaml блока firewalls
-                );
-            }catch (\DomainException $e) {
+                $this->addFlash('success', 'Check your email.');
+                return $this->redirectToRoute('home');
+            } catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception' => $e]);
-                $this->addFlash('error', $this->translator->trans($e->getMessage(),[],'exceptions'));
-                return $this->redirectToRoute('auth.signup');
+                $this->addFlash('error', $e->getMessage());
             }
         }
-        return $this->render('app/auth/auth.html.twig', [
+
+        return $this->render('app/auth/signup.html.twig', [
             'form' => $form->createView(),
         ]);
     }

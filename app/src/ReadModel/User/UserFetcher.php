@@ -138,4 +138,12 @@ class UserFetcher extends Fetcher
 
         return null;
     }
+
+    public function getDetail(string $id): DetailView
+    {
+        if (!$detail = $this->findDetail($id)) {
+            throw new \LogicException('User is not found');
+        }
+        return $detail;
+    }
 }
