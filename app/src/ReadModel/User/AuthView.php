@@ -20,4 +20,6 @@ class AuthView extends AbstractCommand
 
     public $status;
 
+    public $name;
+
 }

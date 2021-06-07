@@ -7,6 +7,7 @@ namespace App\ReadModel\User;
 use App\ReadModel\AbstractCommand;
 use App\ReadModel\Fetcher;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 
 class UserFetcher extends Fetcher
 {
@@ -24,7 +25,7 @@ class UserFetcher extends Fetcher
     public function findForAuthByEmail(string $email):? AuthView
     {
         $qb=$this->getQueryBuilder()
-            ->select('id','email','password_hash','role','status')
+            ->select('id','email','password_hash','role','TRIM(CONCAT(name_first, \' \', name_last)) AS name','status')
             ->from('user_users')
             ->where('email=:email')
             ->setParameter(':email',$email);
@@ -44,6 +45,7 @@ class UserFetcher extends Fetcher
                 'u.id',
                 'u.email',
                 'u.password_hash',
+                'TRIM(CONCAT(u.name_first, \' \', u.name_last)) AS name',
                 'u.role',
                 'u.status'
             )
@@ -90,6 +92,8 @@ class UserFetcher extends Fetcher
             ->select(
                 'id',
                 'created_at',
+                'name_first first_name',
+                'name_last last_name',
                 'email',
                 'role',
                 'status'
@@ -145,5 +149,24 @@ class UserFetcher extends Fetcher
             throw new \LogicException('User is not found');
         }
         return $detail;
+    }
+
+    public function all(): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'created_at',
+                'TRIM(CONCAT(name_first, \' \', name_last)) AS name',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->orderBy('created_at', 'desc');
+
+        $stmt=$this->getStatement($qb);
+
+        return $stmt->fetchAllAssociative();
     }
 }

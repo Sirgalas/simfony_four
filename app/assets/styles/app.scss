@@ -17,3 +17,14 @@
     padding-left: 15px;
   }
 }
+
+.table {
+  th,
+  td {
+    vertical-align: middle;
+  }
+}
+.box {
+  background: #fff;
+  box-shadow: 0 0 2px rgba(0,0,0,0.1);
+}
