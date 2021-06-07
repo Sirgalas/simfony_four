@@ -4,12 +4,12 @@ up: docker-up
 down: docker-down
 restart: docker-down docker-up
 restart-clear: docker-down-clear docker-build docker-up
-init: docker-down-clear docker-build docker-up assets-install composer-install
+init: docker-down-clear clear docker-build docker-up wait-db migrations fixtures assets-install composer-install ready
 asset-init: assets-install assets-watch
 app-init: composer-install assets-install migrations fixtures
 
 clear:
-	docker run --rm -v ${PWD}/app:/app --workdir=/app alpine rm -f .ready
+	docker run --rm -v ${pwd}/app --workdir=/app alpine rm -f .ready
 
 docker-up:
 	docker-compose up -d
@@ -33,16 +33,25 @@ assets-dev:
 	docker-compose run --rm node npm run dev
 
 assets-watch:
-	docker-compose run --rm node npm run watch
+	docker-compose run --rm node npm run watc
 
 ready:
-	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine touch .ready
+	docker run --rm -v ${pwd}/app --workdir=/app alpine touch .ready
 
 composer-install:
 	docker-compose run --rm php-cli composer install
 
 composer-update:
 	docker-compose run --rm php-cli composer update
+
+wait-db:
+	until docker-compose exec -T db pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
+
+migrations:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
+
+fixtures:
+	docker-compose run --rm php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 add-controller:
 	docker-compose run --rm php-cli php bin/console make:controller
@@ -64,9 +73,6 @@ cache-clear:
 
 migrate:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --no-interaction
-
-fixtures:
-	docker-compose run --rm php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 diff:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff
