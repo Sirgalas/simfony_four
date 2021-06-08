@@ -50,4 +50,9 @@ class Name
     {
         $this->last=$last;
     }
+
+    public function getFull(): string
+    {
+        return $this->first . ' ' . $this->last;
+    }
 }

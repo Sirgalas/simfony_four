@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block breadcrumbs %}
+        <li class="breadcrumb-item active">{{ user.name.full }}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header"><i class="fa fa-align-justify"></i> Simple Table</div>
+        <div class="card-body">
+            <div class="controls">
+                <a href="{{ path('users.edit', {'id': user.id}) }}" class="btn btn-primary">Edit</a>
+                {% if user.id.value != app.user.id %}
+                    <a href="{{ path('users.role', {'id': user.id}) }}" class="btn btn-primary">Change Role</a>
+                {% endif %}
+                {% if user.wait %}
+                    <form action="{{ path('users.confirm', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="token" value="{{ csrf_token('confirm') }}" />
+                        <button type="submit" class="btn btn-success">Confirm</button>
+                    </form>
+                {% endif %}
+            </div>
+                <table class="table table-responsive-sm table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ user.name.full }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ user.email ? user.email.value : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ user.id.value }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td>{{ user.date|date('Y-m-d H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Role</th>
+                            <td>{{ user_role(user.role.name) }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ user_status(user.status) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+
+
+    {% if user.networks %}
+        <div class="box">
+            <table class="table table-bordered mb-0">
+                <tbody>
+                {% for network in user.networks %}
+                    <tr>
+                        <th>{{ network.network }}</th>
+                        <td>{{ network.identity }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

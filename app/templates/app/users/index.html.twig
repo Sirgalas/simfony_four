@@ -7,28 +7,37 @@
 {% endblock %}
 
 {% block body %}
-    <div class="box">
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> Simple Table
+        </div>
+
+        <div class="card-body">
+            <div class="controls">
+                <a href="{{ path('users.create') }}" class="btn btn-success">Create User</a>
+            </div>
+            <table class="table table-responsive-sm table-bordered">
+                <thead>
                 <tr>
-                    <td>{{ user.created_at|date('Y-m-d') }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user_role(user.role) }}</td>
-                    <td>{{ user_status(user.status) }}</td>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.created_at|date('Y-m-d') }}</td>
+                        <td><a href="{{ path('users.show', {'id': user.id}) }}">{{ user.name }}</a></td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user_role(user.role) }}</td>
+                        <td>{{ user_status(user.status) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
