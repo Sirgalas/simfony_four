@@ -15,8 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
-    private const STATUS_WAIT='wait';
+    public const STATUS_WAIT='wait';
     public const STATUS_ACTIVE='active';
+    public const STATUS_BLOCKED = 'blocked';
     /**
      * @var Id
      * @ORM\Column (type="user_id")
@@ -228,6 +229,22 @@ class User
         $this->email = $email;
     }
 
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+    }
+
+    public function block(): void
+    {
+        if ($this->isBlocked()) {
+            throw new \DomainException('User is already blocked.');
+        }
+        $this->status = self::STATUS_BLOCKED;
+    }
+
     public function getId():Id
     {
         return $this->id;
@@ -290,6 +307,11 @@ class User
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
     }
 
     public function getStatus():string

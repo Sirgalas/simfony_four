@@ -13,9 +13,27 @@
         </div>
 
         <div class="card-body">
+
             <div class="controls">
                 <a href="{{ path('users.create') }}" class="btn btn-success">Create User</a>
             </div>
+
+            <div class="filter">
+                {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-2">{{ form_widget(form.name) }}</div>
+                    <div class="col-md-2">{{ form_widget(form.email) }}</div>
+                    <div class="col-md-2">{{ form_widget(form.role) }}</div>
+                    <div class="col-md-2">{{ form_widget(form.status) }}</div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{{ path('users') }}" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+
+
             <table class="table table-responsive-sm table-bordered">
                 <thead>
                 <tr>

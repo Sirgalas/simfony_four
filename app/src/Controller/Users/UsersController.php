@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Model\User\Entity\User\User;
+use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
 use App\Model\User\UseCase\Edit;
@@ -34,8 +35,15 @@ class UsersController extends AbstractController
      */
     public function index(Request $request,UserFetcher $fetcher):Response
     {
-        $users=$fetcher->all();
-        return $this->render('app/users/index.html.twig', compact('users'));
+        $filter = new Filter\Filter();
+        $form = $this->createForm(Filter\Form::class, $filter);
+        $form->handleRequest($request);
+        $users=$fetcher->all($filter);
+        return $this->render('app/users/index.html.twig',
+            [
+                'users' => $users,
+                'form' => $form->createView()
+            ]);
     }
 
     /**
