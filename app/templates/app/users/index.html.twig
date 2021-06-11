@@ -16,46 +16,43 @@
 
             <div class="controls">
                 <a href="{{ path('users.create') }}" class="btn btn-success">Create User</a>
+                <a href="{{ path('users') }}" class="btn btn-outline-secondary">Reset Search</a>
             </div>
 
-            <div class="filter">
-                {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-md-2">{{ form_widget(form.name) }}</div>
-                    <div class="col-md-2">{{ form_widget(form.email) }}</div>
-                    <div class="col-md-2">{{ form_widget(form.role) }}</div>
-                    <div class="col-md-2">{{ form_widget(form.status) }}</div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="{{ path('users') }}" class="btn btn-outline-secondary">Reset</a>
-                    </div>
-                </div>
-                {{ form_end(form) }}
-            </div>
-
-
-            <table class="table table-responsive-sm table-bordered">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in users %}
+            {{ form_start(form) }}
+                <table class="table table-responsive-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{ knp_pagination_sortable(users, 'Date', 'created_at') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Name', 'name') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Email', 'email') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Role', 'role') }}</th>
+                            <th>{{ knp_pagination_sortable(users, 'Status', 'status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <tr>
-                        <td>{{ user.created_at|date('Y-m-d') }}</td>
-                        <td><a href="{{ path('users.show', {'id': user.id}) }}">{{ user.name }}</a></td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user_role(user.role) }}</td>
-                        <td>{{ user_status(user.status) }}</td>
+                        <td></td>
+                        <td>{{ form_widget(form.name) }}</td>
+                        <td>{{ form_widget(form.email) }}</td>
+                        <td>{{ form_widget(form.role) }}</td>
+                        <td>{{ form_widget(form.status) }}</td>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.created_at|date('Y-m-d') }}</td>
+                            <td><a href="{{ path('users.show', {'id': user.id}) }}">{{ user.name }}</a></td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user_role(user.role) }}</td>
+                            <td>{{ user_status(user.status) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {{ form_end(form) }}
         </div>
+    </div>
+    <div class="navigation">
+        {{ knp_pagination_render(users) }}
     </div>
 {% endblock %}

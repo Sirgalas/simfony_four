@@ -11,10 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Model\User\UseCase\Role;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 /**
  * Class UsersController
  * @package App\Controller
  * @Route("/user/role")
+ * @IsGranted ("ROLE_MANAGE_USERS")
  */
 class RoleController extends AbstractController
 {

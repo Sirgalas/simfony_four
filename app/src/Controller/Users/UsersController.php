@@ -14,14 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Model\User\UseCase\SignUp\Confirm;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * Class UsersController
  * @package App\Controller
- * @Route("/users")
+ * @Route("/users", name="users")
  */
 class UsersController extends AbstractController
 {
+    private const PER_PAGE=10;
     private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
@@ -30,7 +32,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/",name="users")
+     * @Route("/",name="")
      * return Response
      */
     public function index(Request $request,UserFetcher $fetcher):Response
@@ -38,7 +40,13 @@ class UsersController extends AbstractController
         $filter = new Filter\Filter();
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
-        $users=$fetcher->all($filter);
+        $users=$fetcher->all(
+            $filter,
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'created_at'),
+            $request->query->get('direction', 'desc')
+        );
         return $this->render('app/users/index.html.twig',
             [
                 'users' => $users,
@@ -47,10 +55,11 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="users.create")
+     * @Route("/create", name=".create")
      * @param Request $request
      * @param Create\Handler $handler
      * @return Response
+     * @IsGranted("ROLE_MANAGE_USERS")
      */
     public function create(Request $request, Create\Handler $handler): Response
     {
@@ -75,11 +84,12 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="users.edit")
+     * @Route("/{id}/edit", name=".edit")
      * @param User $user
      * @param Request $request
      * @param Edit\Handler $handler
      * @return Response
+     * @IsGranted("ROLE_MANAGE_USERS")
      */
     public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
@@ -105,7 +115,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="users.show")
+     * @Route("/{id}", name=".show")
      * @param User $user
      * @return Response
      */
@@ -115,11 +125,12 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/confirm", name="users.confirm", methods={"POST"})
+     * @Route("/{id}/confirm", name=".confirm", methods={"POST"})
      * @param User $user
      * @param Request $request
      * @param Confirm\Manual\Handler $handler
      * @return Response
+     * @IsGranted("ROLE_MANAGE_USERS")
      */
     public function confirm(User $user, Request $request, Confirm\Manual\Handler $handler): Response
     {

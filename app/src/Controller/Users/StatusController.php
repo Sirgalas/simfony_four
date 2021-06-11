@@ -11,8 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 /**
- * @Route("/users/status")
+ * @Route("/users/status", name="users.status")
+ * @IsGranted ("ROLE_MANAGE_USERS")
  */
 class StatusController extends AbstractController
 {
@@ -24,7 +26,7 @@ class StatusController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/activate", name="users.activate", methods={"POST"})
+     * @Route("/{id}/activate", name=".activate", methods={"POST"})
      * @param User $user
      * @param Request $request
      * @param Activate\Handler $handler
@@ -47,7 +49,7 @@ class StatusController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/block", name="users.block", methods={"POST"})
+     * @Route("/{id}/block", name=".block", methods={"POST"})
      * @param User $user
      * @param Request $request
      * @param Block\Handler $handler

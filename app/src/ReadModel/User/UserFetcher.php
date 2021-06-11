@@ -4,11 +4,15 @@
 namespace App\ReadModel\User;
 
 
+use App\Exceptions\NotFoundException;
+use App\Model\User\Entity\User\User;
 use App\ReadModel\AbstractCommand;
 use App\ReadModel\Fetcher;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class UserFetcher extends Fetcher
 {
@@ -86,46 +90,12 @@ class UserFetcher extends Fetcher
 
         return null;
     }
-    public function findDetail(string $id): ?DetailView
+    public function get(string $id): User
     {
-
-        $qb = $this->connection->createQueryBuilder()
-            ->select(
-                'id',
-                'created_at',
-                'name_first first_name',
-                'name_last last_name',
-                'email',
-                'role',
-                'status'
-            )
-            ->from('user_users')
-            ->where('id = :id')
-            ->setParameter(':id', $id);
-
-        $stmt = $this->getStatement($qb);
-        $row = $stmt->fetchAssociative();
-
-        /** @var DetailView $view */
-        if (false !== $row) {
-            return new DetailView($row);
+        if(!$user=$this->repository->find($id)){
+            throw new NotFoundException('User is not found');
         }
-
-        $qb = $this->connection->createQueryBuilder()
-            ->select('network', 'identity')
-            ->from('user_user_networks')
-            ->where('user_id = :id')
-            ->setParameter(':id', $id);
-
-        $stmt = $this->getStatement($qb);
-        $row = $stmt->fetchAssociative();
-
-        /** @var DetailView $view */
-        if (false !== $row) {
-            return new DetailView($row);
-        }
-
-        return $view;
+        return $user;
     }
 
     public function findBySignUpConfirmToken(string $token): ?ShortView
@@ -144,15 +114,13 @@ class UserFetcher extends Fetcher
         return null;
     }
 
-    public function getDetail(string $id): DetailView
-    {
-        if (!$detail = $this->findDetail($id)) {
-            throw new \LogicException('User is not found');
-        }
-        return $detail;
-    }
-
-    public function all(Filter $filter): array
+    /**
+     * @param Filter $filter
+     * @param int $page
+     * @param int $size
+     * @return PaginationInterface
+     */
+    public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
         $qb = $this->connection->createQueryBuilder()
             ->select(
@@ -163,8 +131,7 @@ class UserFetcher extends Fetcher
                 'role',
                 'status'
             )
-            ->from('user_users')
-            ->orderBy('created_at', 'desc');
+            ->from('user_users');
 
         if ($filter->name) {
             $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \' \', name_last))', ':name'));
@@ -185,9 +152,12 @@ class UserFetcher extends Fetcher
             $qb->andWhere('role = :role');
             $qb->setParameter(':role', $filter->role);
         }
+        if (!\in_array($sort, ['created_at', 'name', 'email', 'role', 'status'], true)) {
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
+        }
 
-        $stmt=$this->getStatement($qb);
+        $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');
 
-        return $stmt->fetchAllAssociative();
+        return $this->paginator->paginate($qb,$page,$size);
     }
 }

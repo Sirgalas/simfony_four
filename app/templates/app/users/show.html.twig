@@ -11,8 +11,9 @@
         <div class="card-header"><i class="fa fa-align-justify"></i> Simple Table</div>
         <div class="card-body">
             <div class="controls">
-                <a href="{{ path('users.edit', {'id': user.id}) }}" class="btn btn-primary">Edit</a>
+
                 {% if user.id.value != app.user.id %}
+                    <a href="{{ path('users.edit', {'id': user.id}) }}" class="btn btn-primary">Edit</a>
                     <a href="{{ path('users.role', {'id': user.id}) }}" class="btn btn-primary">Change Role</a>
                 {% endif %}
                 {% if user.wait %}
@@ -22,13 +23,13 @@
                     </form>
                 {% endif %}
                 {% if user.active and user.id.value != app.user.id %}
-                    <form action="{{ path('users.block', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                    <form action="{{ path('users.status.block', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
                         <input type="hidden" name="token" value="{{ csrf_token('block') }}" />
                         <button type="submit" class="btn btn-danger">Block</button>
                     </form>
                 {% endif %}
                 {% if user.blocked %}
-                    <form action="{{ path('users.activate', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                    <form action="{{ path('users.status.activate', {'id': user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
                         <input type="hidden" name="token" value="{{ csrf_token('activate') }}" />
                         <button type="submit" class="btn btn-success">Activate</button>
                     </form>
@@ -43,10 +44,6 @@
                         <tr>
                             <th>Email</th>
                             <td>{{ user.email ? user.email.value : '' }}</td>
-                        </tr>
-                        <tr>
-                            <th>ID</th>
-                            <td>{{ user.id.value }}</td>
                         </tr>
                         <tr>
                             <th>Created</th>
