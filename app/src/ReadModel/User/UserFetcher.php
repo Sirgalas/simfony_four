@@ -10,12 +10,18 @@ use App\ReadModel\AbstractCommand;
 use App\ReadModel\Fetcher;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 class UserFetcher extends Fetcher
 {
+
+    public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator)
+    {
+        parent::__construct($connection, $em, $paginator);
+        $this->repository=$this->repository = $em->getRepository(User::class);
+    }
 
     public function existsByResetToken(string $token):bool
     {

@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+
+namespace App\DataFixtures\Work\Members;
+
+use App\Model\Work\Entity\Members\Group\Group;
+use App\Model\Work\Entity\Members\Group\Id;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class GroupFixtures extends Fixture
+{
+    public function load(\Doctrine\Persistence\ObjectManager $manager)
+    {
+        $group = new Group(
+            Id::next(),
+            'Our Staff'
+        );
+
+        $manager->persist($group);
+
+        $group = new Group(
+            Id::next(),
+            'Customers'
+        );
+
+        $manager->persist($group);
+
+        $manager->flush();
+    }
+}

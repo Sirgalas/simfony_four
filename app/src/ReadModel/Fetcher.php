@@ -28,7 +28,7 @@ class Fetcher
     public function __construct(Connection $connection, EntityManagerInterface $em,PaginatorInterface $paginator) {
         $this->connection = $connection;
         $this->paginator = $paginator;
-        $this->repository = $em->getRepository(User::class);
+
     }
 
     final public function getStatement(QueryBuilder $queryBuilder): DriverStatement
