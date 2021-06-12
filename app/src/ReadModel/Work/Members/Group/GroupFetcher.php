@@ -14,7 +14,8 @@ class GroupFetcher extends Fetcher
         $qb = $this->connection->createQueryBuilder()
             ->select(
                 'g.id',
-                'g.name'
+                'g.name',
+                '(SELECT COUNT(*) FROM work_members_members m WHERE m.group_id = g.id) AS members'
             )
             ->from('work_members_groups', 'g')
             ->orderBy('name');

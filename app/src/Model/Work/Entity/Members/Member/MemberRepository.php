@@ -5,6 +5,7 @@ namespace App\Model\Work\Entity\Members\Member;
 
 use App\Exceptions\EntityNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Model\Work\Entity\Members\Group\Id as GroupId;
 
 class MemberRepository
 {
@@ -29,6 +30,14 @@ class MemberRepository
                 ->getQuery()->getSingleScalarResult() > 0;
     }
 
+    public function hasByGroup(GroupId $id): bool
+    {
+        return $this->repo->createQueryBuilder('t')
+                ->select('COUNT(t.id)')
+                ->andWhere('t.group = :group')
+                ->setParameter(':group', $id->getValue())
+                ->getQuery()->getSingleScalarResult() > 0;
+    }
 
     public function get(Id $id): Member
     {

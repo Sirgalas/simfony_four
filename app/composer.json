@@ -17,6 +17,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.8",
         "finesse/swiftmailer-defaults-plugin": "^2.0",
+        "knplabs/knp-menu-bundle": "^3.1",
         "knplabs/knp-paginator-bundle": "^5.5",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "league/oauth2-facebook": "^2.0",
