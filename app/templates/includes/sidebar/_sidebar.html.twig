@@ -7,8 +7,7 @@
             <use xlink:href="assets/brand/coreui.svg#signet"></use>
         </svg>
     </div>
-    <ul class="c-sidebar-nav">
-        {% include '/includes/sidebar/_menu.html.twig' %}
-    </ul>
+    {{ knp_menu_render('sidebar', {'currentClass': 'c-active'}) }}
+
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
 </div>

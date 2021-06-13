@@ -46,6 +46,7 @@ class Member
         $this->group = $group;
         $this->name = $name;
         $this->email = $email;
+        $this->status = Status::ACTIVE;
     }
 
     public function edit(Name $name, Email $email): void

@@ -31,7 +31,7 @@ class Command
         $this->id=$id;
     }
 
-    public function fromUser(User $user): self
+    public static function fromUser(User $user): self
     {
         $command= new self($user->getId()->getValue());
         $command->firstName= $user->getName()->getFirst();
