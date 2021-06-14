@@ -47,6 +47,18 @@ class ProjectSettingsMenu
                 ])
                 ->setAttribute('class', 'c-sidebar-nav-item')
                 ->setLinkAttribute('class', 'c-sidebar-nav-link');
+
+            $menu
+                ->addChild('Members', [
+                    'route' => 'work.projects.project.settings.members',
+                    'routeParameters' => ['project_id' => $options['project_id']]
+                ])
+                ->setExtra('routes', [
+                    ['route' => 'work.projects.project.settings.members'],
+                    ['pattern' => '/^work.projects.project.settings.members\..+/']
+                ])
+                ->setAttribute('class', 'c-sidebar-nav-item')
+                ->setLinkAttribute('class', 'c-sidebar-nav-link');
         }
 
         return $menu;

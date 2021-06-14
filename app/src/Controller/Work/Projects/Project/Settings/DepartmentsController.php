@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 
 /**
  * @Route("/work/projects/{project_id}/settings/departments", name="work.projects.project.settings.departments")
