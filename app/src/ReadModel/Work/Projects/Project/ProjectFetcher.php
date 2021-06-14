@@ -3,28 +3,19 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects\Project;
 
+use App\ReadModel\Fetcher;
 use App\ReadModel\Work\Projects\Project\Filter\Filter;
-use Doctrine\DBAL\Connection;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
-class ProjectFetcher
+class ProjectFetcher extends Fetcher
 {
-    private $connection;
-    private $paginator;
-
-    public function __construct(Connection $connection, PaginatorInterface $paginator)
-    {
-        $this->connection = $connection;
-        $this->paginator = $paginator;
-    }
-
     public function getMaxSort(): int
     {
         return (int)$this->connection->createQueryBuilder()
             ->select('MAX(p.sort) AS m')
             ->from('work_projects_projects', 'p')
-            ->execute()->fetchOne();
+            ->execute()
+            ->fetchOne();
     }
 
     /**
