@@ -73,7 +73,24 @@ class MemberFetcher extends Fetcher
                 ->from('work_members_members')
                 ->where('id = :id')
                 ->setParameter(':id', $id)
-                ->execute()->fetchColumn() > 0;
+                ->execute()->fetchOne()> 0;
+    }
+
+    public function activeGroupedList(): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select([
+                'm.id',
+                'CONCAT(m.name_first, \' \', m.name_last) AS name',
+                'g.name AS group'
+            ])
+            ->from('work_members_members', 'm')
+            ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id')
+            ->andWhere('m.status = :status')
+            ->setParameter(':status', Status::ACTIVE)
+            ->orderBy('g.name')->addOrderBy('name');
+        $stmt=$this->getStatement($qb);
+        return $stmt->fetchAssociative();
     }
 
 }

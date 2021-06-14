@@ -11,6 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class RoleFixture extends Fixture
 {
+    public const REFERENCE_MANAGER = 'work_project_role_manager';
+
     public function load(ObjectManager $manager)
     {
         $guest = $this->createRole('Guest', []);
@@ -20,6 +22,7 @@ class RoleFixture extends Fixture
             Permission::MANAGE_PROJECT_MEMBERS,
         ]);
         $manager->persist($manage);
+        $this->setReference(self::REFERENCE_MANAGER, $manage);
 
         $manager->flush();
     }

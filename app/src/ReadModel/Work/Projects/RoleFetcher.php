@@ -39,4 +39,18 @@ class RoleFetcher extends Fetcher
             ]);
         }, $stmt->fetchAllAssociative());
     }
+
+    public function allList(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name'
+            )
+            ->from('work_projects_roles')
+            ->orderBy('name')
+            ->execute();
+
+        return $stmt->fetchAllAssociative();
+    }
 }
