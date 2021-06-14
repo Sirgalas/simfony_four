@@ -42,6 +42,17 @@ class SidebarMenu
                 ->setLinkAttribute('class', 'c-sidebar-nav-link');
         }
 
+        if($this->auth->isGranted('ROLE_WORK_MANAGE_PROJECTS')){
+            $menu->addChild('Projects', ['route' => 'work.projects'])
+                ->setExtra('routes', [
+                    ['route' => 'work.projects'],
+                    ['pattern' => '/^work.projects\..+/']
+                ])
+                ->setExtra('icon', 'c-sidebar-nav-icon icon-briefcase')
+                ->setAttribute('class', 'c-sidebar-nav-item')
+                ->setLinkAttribute('class', 'c-sidebar-nav-link');
+        }
+
         $menu->addChild('Control')->setAttribute('class', 'c-sidebar-nav-title');
 
         if ($this->auth->isGranted('ROLE_MANAGE_USERS')) {

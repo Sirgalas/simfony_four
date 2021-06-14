@@ -7,12 +7,15 @@ use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Project\Id;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Model\Work\Entity\Projects\Department\Id as DepartmentId;
 
 class ProjectFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
         $active = $this->createProject('First Project', 1);
+        $active->addDepartment(DepartmentId::next(), 'Development');
+        $active->addDepartment(DepartmentId::next(), 'Marketing');
         $manager->persist($active);
 
         $active = $this->createProject('Second Project', 2);

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
+        <li class="breadcrumb-item active">{{ project.name }}</li>
+{% endblock %}
+
+{% block body %}
+
+    {{ include('app/work/projects/project/_tabs.html.twig') }}
+
+{% endblock %}
