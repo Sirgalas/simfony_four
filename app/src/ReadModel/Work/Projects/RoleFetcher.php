@@ -3,10 +3,24 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects;
 
+use App\Model\Work\Entity\Projects\Role\Role;
 use App\ReadModel\Fetcher;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class RoleFetcher extends Fetcher
 {
+    public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator)
+    {
+        parent::__construct($connection, $em, $paginator);
+        $this->repository=$this->repository = $em->getRepository(Role::class);
+    }
+
+    public function get(string $id){
+        return $this->repository->find($id);
+    }
+
     public function all(): array
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -23,6 +37,6 @@ class RoleFetcher extends Fetcher
             return array_replace($role, [
                 'permissions' => json_decode($role['permissions'], true)
             ]);
-        }, $stmt->fetchAll(FetchMode::ASSOCIATIVE));
+        }, $stmt->fetchAllAssociative());
     }
 }

@@ -30,7 +30,7 @@ class Command
         $this->id = $id;
     }
 
-    public static function formRole(Role $role):self
+    public static function fromRole(Role $role):self
     {
         $command = new self($role->getId()->getValue());
         $command->name = $role->getName();

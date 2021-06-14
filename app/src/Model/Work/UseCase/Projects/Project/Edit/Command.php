@@ -29,7 +29,7 @@ class Command
         $this->id = $id;
     }
 
-    public static function formProject(Project $project):self
+    public static function fromProject(Project $project):self
     {
         $command = new self($project->getId()->getValue());
         $command->name = $project->getName();

@@ -18,6 +18,7 @@ class RoleRepository
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+        $this->repo = $em->getRepository(Role::class);
     }
 
     public function hasByName(string $name): bool

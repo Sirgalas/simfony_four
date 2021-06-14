@@ -6,6 +6,10 @@ namespace App\Model\Work\Entity\Projects\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="work_projects_roles")
+ */
 class Role
 {
     /**
@@ -25,7 +29,7 @@ class Role
      * @var ArrayCollection|Permission[]
      * @ORM\Column(type="work_projects_role_permissions")
      */
-    private array $permissions;
+    private $permissions;
 
     /**
      * Role constructor.
@@ -33,7 +37,7 @@ class Role
      * @param string $name
      * @param string[] $permissions
      */
-    public function __construct(Id $id, string $name, array $permissions)
+    public function __construct(Id $id, string $name,$permissions)
     {
         $this->id = $id;
         $this->name = $name;

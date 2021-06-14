@@ -27,7 +27,6 @@ class PermissionsType extends JsonType
         if (!is_array($data = parent::convertToPHPValue($value, $platform))) {
             return $data;
         }
-
         return new ArrayCollection(array_filter(array_map([self::class, 'serialize'], $data)));
     }
 
