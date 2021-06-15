@@ -11,7 +11,7 @@ class Filter
     public $name;
     public $status = Status::ACTIVE;
 
-    public function __construct(?string $member)
+    private function __construct(?string $member)
     {
         $this->member = $member;
     }

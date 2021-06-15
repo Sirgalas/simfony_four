@@ -5,7 +5,7 @@ namespace App\Controller\Profile;
 
 use App\Model\User\UseCase\Name;
 use App\ReadModel\User\UserFetcher;
-use Psr\Log\LoggerInterface;
+use App\Controller\ErrorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +19,12 @@ class NameController extends AbstractController
 
 
     private UserFetcher $users;
-    private LoggerInterface $logger;
+    private ErrorHandler $errors;
 
-    public function __construct(UserFetcher $users, LoggerInterface $logger)
+    public function __construct(UserFetcher $users, ErrorHandler $errors)
     {
         $this->users = $users;
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -48,7 +48,7 @@ class NameController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('profile');
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }

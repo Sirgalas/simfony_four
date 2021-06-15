@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Model\User\UseCase\Role;
 use App\ReadModel\User\UserFetcher;
-use Psr\Log\LoggerInterface;
+use App\Controller\ErrorHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 /**
  * Class UsersController
@@ -20,11 +20,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class RoleController extends AbstractController
 {
-    private LoggerInterface $logger;
+    private ErrorHandler $errors;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errors)
     {
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -49,7 +49,7 @@ class RoleController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('users.show',['id'=>$user->getId()]);
             }catch (\DomainException $e){
-                $this->logger->warning($e->getMessage(),['exception'=>$e]);
+                $this->errors->warning($e->getMessage(),['exception'=>$e]);
                 $this->addFlash('error',$e->getMessage());
             }
         }

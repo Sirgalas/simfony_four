@@ -6,7 +6,7 @@ namespace App\Controller\Users;
 use App\Model\User\Entity\User\User;
 use App\Model\User\UseCase\Activate;
 use App\Model\User\UseCase\Block;
-use Psr\Log\LoggerInterface;
+use App\Controller\ErrorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,11 +18,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class StatusController extends AbstractController
 {
-    private $logger;
+    private $errors;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errors)
     {
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -42,7 +42,7 @@ class StatusController extends AbstractController
         try {
             $handler->handle($command);
         }catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
         return $this->redirectToRoute('users.show',['id'=>$user->getId()]);
@@ -71,7 +71,7 @@ class StatusController extends AbstractController
         try{
             $handler->handle($command);
         }catch(\DomainException $e){
-            $this->logger->warning($e->getMessage(),['exception'=>$e]);
+            $this->errors->warning($e->getMessage(),['exception'=>$e]);
             $this->addFlash('error',$e->getMessage());
         }
         return $this->redirectToRoute('users.show', ['id' => $user->getId()]);

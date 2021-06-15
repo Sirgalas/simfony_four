@@ -8,7 +8,7 @@ use App\Model\Work\UseCase\Members\Group\Create;
 use App\Model\Work\UseCase\Members\Group\Edit;
 use App\Model\Work\UseCase\Members\Group\Remove;
 use App\ReadModel\Work\Members\Group\GroupFetcher;
-use Psr\Log\LoggerInterface;
+use App\Controller\ErrorHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,11 +21,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class GroupsControllers extends AbstractController
 {
-    private LoggerInterface $logger;
+    private ErrorHandler $errors;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errors)
     {
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -56,7 +56,7 @@ class GroupsControllers extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work.members.groups');
             }catch (\DomainException $e){
-                $this->logger->warning($e->getMessage(),['exception'=>$e]);
+                $this->errors->warning($e->getMessage(),['exception'=>$e]);
                 $this->addFlash('error',$e->getMessage());
             }
         }
@@ -84,7 +84,7 @@ class GroupsControllers extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work.members.groups.show', ['id' => $group->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -114,7 +114,7 @@ class GroupsControllers extends AbstractController
             $handler->handle($command);
             return $this->redirectToRoute('work.members.groups');
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
