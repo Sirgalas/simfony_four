@@ -10,18 +10,17 @@ use App\Model\Work\UseCase\Projects\Department\Create;
 use App\Model\Work\UseCase\Projects\Department\Edit;
 use App\Model\Work\UseCase\Projects\Department\Remove;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
+use App\Security\Voter\Work\ProjectAccess;
 
 /**
  * @Route("/work/projects/{project_id}/settings/departments", name="work.projects.project.settings.departments")
  * @ParamConverter("project", options={"id" = "project_id"})
- * @IsGranted("ROLE_WORK_MANAGE_PROJECTS")
  */
 class DepartmentsController extends AbstractController
 {
@@ -39,6 +38,7 @@ class DepartmentsController extends AbstractController
      */
     public function index(Project $project): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         return $this->render('app/work/projects/project/settings/departments/index.html.twig', [
             'project' => $project,
             'departments' => $project->getDepartments(),
@@ -54,6 +54,7 @@ class DepartmentsController extends AbstractController
      */
     public function create(Project $project, Request $request, Create\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
         $command = new Create\Command($project->getId()->getValue());
 
         $form = $this->createForm(Create\Form::class, $command);

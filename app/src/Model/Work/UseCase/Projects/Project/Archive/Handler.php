@@ -18,7 +18,7 @@ class Handler
         $this->flusher = $flusher;
     }
 
-    public function hanble(Command $command): void
+    public function handle(Command $command): void
     {
         $project = $this->projects->get(new Id($command->id));
 
