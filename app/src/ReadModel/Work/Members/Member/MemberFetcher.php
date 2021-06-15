@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\ReadModel\Work\Members\Member;
 
 use App\Model\Work\Entity\Members\Member\Member;
+use App\Model\Work\Entity\Members\Member\Status;
 use App\ReadModel\Work\Members\Member\Filter\Filter;
 use App\ReadModel\Fetcher;
 use Doctrine\DBAL\Connection;

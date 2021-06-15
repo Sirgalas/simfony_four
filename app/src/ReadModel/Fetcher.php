@@ -45,4 +45,9 @@ class Fetcher
     {
         return $this->connection->createQueryBuilder();
     }
+
+    final public function getKeyPair(array $queryArray, string $first, string $second)
+    {
+        return array_column($queryArray, $first, $second);
+    }
 }

@@ -16,14 +16,14 @@ class DepartmentFetcher extends Fetcher
                 'id',
                 'name'
             )
-            ->from('work_projects_project_departments')
+            ->from('work_projects_departments')
             ->andWhere('project_id = :project')
             ->setParameter(':project', $project)
             ->orderBy('name');
 
         $stmt = $this->getStatement($qb);
 
-        return $stmt->fetchAllAssociative();
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');;
     }
 
     public function allOfProject(string $project): array

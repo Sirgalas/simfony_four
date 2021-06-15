@@ -52,6 +52,6 @@ class RoleFetcher extends Fetcher
             ->orderBy('name')
             ->execute();
 
-        return $stmt->fetchAllAssociative();
+        return array_column($stmt->fetchAllAssociative(), 'name', 'id');
     }
 }
