@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
-use App\Security\Voter\Work\ProjectAccess;
+use App\Security\Voter\Work\Project\ProjectAccess;
 
 /**
  * @Route("/work/projects/{project_id}/settings/departments", name="work.projects.project.settings.departments")

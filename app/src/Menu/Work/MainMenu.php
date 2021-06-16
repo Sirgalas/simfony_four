@@ -7,7 +7,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ProjectsMenu
+class MainMenu
 {
     private $factory;
     private $auth;

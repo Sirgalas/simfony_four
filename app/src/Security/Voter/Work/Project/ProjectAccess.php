@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Security\Voter\Work;
+namespace App\Security\Voter\Work\Project;
 
 use App\Model\Work\Entity\Members\Member\Id;
 use App\Model\Work\Entity\Projects\Project\Project;

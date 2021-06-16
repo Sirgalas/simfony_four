@@ -10,7 +10,7 @@ use App\Model\Work\UseCase\Projects\Project\Edit;
 use App\Model\Work\UseCase\Projects\Project\Reinstate;
 use App\Model\Work\UseCase\Projects\Project\Remove;
 use App\Controller\ErrorHandler;
-use App\Security\Voter\Work\ProjectAccess;
+use App\Security\Voter\Work\Project\ProjectAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

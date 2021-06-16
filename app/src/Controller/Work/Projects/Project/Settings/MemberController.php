@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Security\Voter\Work\ProjectAccess;
+use App\Security\Voter\Work\Project\ProjectAccess;
 
 /**
  * @Route("/work/projects/{project_id}/settings/members", name="work.projects.project.settings.members")
