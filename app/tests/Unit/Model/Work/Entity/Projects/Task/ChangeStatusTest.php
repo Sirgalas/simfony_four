@@ -37,7 +37,7 @@ class ChangeStatusTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $$task->changeStatus($status = new Status(Status::WORKING), $date = new \DateTimeImmutable());
+        $task->changeStatus($status = new Status(Status::WORKING), $date = new \DateTimeImmutable());
 
         $this->expectExceptionMessage('Status is already same.');
         $task->changeStatus($status, $date);

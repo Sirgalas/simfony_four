@@ -104,7 +104,7 @@ class Task
      */
     private $executors;
 
-    public function __consruct(
+    public function __construct(
         Id $id,
         Project $project,
         Member $author,
@@ -120,7 +120,7 @@ class Task
         $this->setDate($date);
         $this->setName($name);
         $this->setContent($content);
-        $this->setPriority(0);
+        $this->setProgress(0);
         $this->setType($type);
         $this->setPriority($priority);
         $this->setStatus(Status::new());
@@ -326,7 +326,7 @@ class Task
 
     public function setProgress(int $progress)
     {
-        $this->project=$progress;
+        $this->progress=$progress;
     }
 
     public function getPriority(): int
