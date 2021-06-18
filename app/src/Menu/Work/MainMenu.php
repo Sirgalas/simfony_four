@@ -25,8 +25,17 @@ class MainMenu
 
         $menu
             ->addChild('Projects', ['route' => 'work.projects'])
-            ->setAttribute('class', 'c-sidebar-nav-item')
-            ->setLinkAttribute('class', 'c-sidebar-nav-link');
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link');
+
+        $menu
+            ->addChild('Tasks', ['route' => 'work.projects.tasks'])
+            ->setExtra('routes', [
+                ['route' => 'work.projects.tasks'],
+                ['pattern' => '/^work.projects.tasks\..+/']
+            ])
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link');
 
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
             $menu
@@ -35,8 +44,8 @@ class MainMenu
                     ['route' => 'work.projects.roles'],
                     ['pattern' => '/^work.projects.roles\..+/']
                 ])
-                ->setAttribute('class', 'c-sidebar-nav-item')
-                ->setLinkAttribute('class', 'c-sidebar-nav-link');
+                ->setAttribute('class', 'nav-item')
+                ->setLinkAttribute('class', 'nav-link');
         }
 
         return $menu;

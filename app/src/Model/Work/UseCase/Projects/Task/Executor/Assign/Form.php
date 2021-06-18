@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form
+class Form extends AbstractType
 {
     private $members;
 
@@ -31,5 +31,13 @@ class Form
                 'expanded' => true,
                 'multiple' => true,
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(array(
+            'data_class' => Command::class,
+        ));
+        $resolver->setRequired(['project_id']);
     }
 }

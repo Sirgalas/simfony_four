@@ -74,7 +74,7 @@ class UsersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('users');
             } catch (\DomainException $e) {
-                $this->errors->error($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }

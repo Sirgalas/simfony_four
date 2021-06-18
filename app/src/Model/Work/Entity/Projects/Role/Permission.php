@@ -8,6 +8,8 @@ use Webmozart\Assert\Assert;
 class Permission
 {
     public const MANAGE_PROJECT_MEMBERS = 'manage_project_members';
+    public const VIEW_TASKS = 'view_tasks';
+    public const MANAGE_TASKS = 'manage_tasks';
 
     private string $name;
 
@@ -20,6 +22,8 @@ class Permission
     {
         return [
             self::MANAGE_PROJECT_MEMBERS,
+            self::VIEW_TASKS,
+            self::MANAGE_TASKS,
         ];
     }
 

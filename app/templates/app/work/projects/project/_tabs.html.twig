@@ -1,2 +1,2 @@
-{% set menu = knp_menu_get('work_project', [], {'project_id': project.id} ) %}
+{% set menu = knp_menu_get('work_projects', [], {'project_id': project.id} ) %}
 {{ knp_menu_render(menu, {'currentClass': 'active'}) }}

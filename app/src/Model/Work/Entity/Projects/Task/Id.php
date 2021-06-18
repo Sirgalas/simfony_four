@@ -12,7 +12,7 @@ class Id
     public function __construct(int $value)
     {
         Assert::notEmpty($value);
-
+        $this->setValue($value);
     }
 
     public function setValue(int $value):void
@@ -20,7 +20,7 @@ class Id
         $this->value=$value;
     }
 
-    public function getValue():int
+    public function getValue(): ?int
     {
         return $this->value;
     }

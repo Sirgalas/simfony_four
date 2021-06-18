@@ -4,19 +4,20 @@ declare(strict_types=1);
 namespace App\Security\Voter\Work\Project;
 
 use App\Model\Work\Entity\Members\Member\Id;
-use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\Entity\Projects\Role\Permission;
-use App\Security\UserIdentity;
+use App\Model\Work\Entity\Projects\Task\Task;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class ProjectAccess  extends Voter
+class TaskAccess extends Voter
 {
     public const VIEW = 'view';
-    public const MANAGE_MEMBERS = 'manage_members';
-    public const EDIT = 'edit';
-    private AuthorizationCheckerInterface $security;
+    public const MANAGE = 'edit';
+    public const DELETE = 'delete';
+
+    private $security;
 
     public function __construct(AuthorizationCheckerInterface $security)
     {
@@ -25,33 +26,35 @@ class ProjectAccess  extends Voter
 
     protected function supports($attribute, $subject): bool
     {
-        return in_array($attribute, [self::VIEW, self::MANAGE_MEMBERS, self::EDIT], true) && $subject instanceof Project;
+        return in_array($attribute, [self::VIEW, self::MANAGE, self::DELETE], true) && $subject instanceof Task;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
+
         $user = $token->getUser();
-        if (!$user instanceof UserIdentity) {
+        if (! $user instanceof UserInterface) {
             return false;
         }
 
-        if (!$subject instanceof Project) {
+        if (!$subject instanceof Task) {
             return false;
         }
-
         switch ($attribute) {
             case self::VIEW:
                 return
                     $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                    $subject->hasMember(new Id($user->getId()));
+                    $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::VIEW_TASKS);
                 break;
-            case self::EDIT:
-                return $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS');
-                break;
-            case self::MANAGE_MEMBERS:
+            case self::MANAGE:
+
                 return
                     $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS') ||
-                    $subject->isMemberGranted(new Id($user->getId()), Permission::MANAGE_PROJECT_MEMBERS);
+                    $subject->getProject()->isMemberGranted(new Id($user->getId()), Permission::MANAGE_TASKS);
+                break;
+            case self::DELETE:
+                return
+                    $this->security->isGranted('ROLE_WORK_MANAGE_PROJECTS');
                 break;
         }
 

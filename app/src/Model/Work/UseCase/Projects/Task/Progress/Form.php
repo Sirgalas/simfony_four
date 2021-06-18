@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Form
+class Form extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -27,5 +27,10 @@ class Form
         $resolver->setDefaults([
             'data_class' => Command::class,
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'status';
     }
 }

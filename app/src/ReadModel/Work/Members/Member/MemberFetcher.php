@@ -92,7 +92,7 @@ class MemberFetcher extends Fetcher
             ->setParameter(':status', Status::ACTIVE)
             ->orderBy('g.name')->addOrderBy('name');
         $stmt=$this->getStatement($qb);
-        return $stmt->fetchAssociative();
+        return $stmt->fetchAllAssociative();
     }
 
     public function activeDepartmentListForProject(string $project): array
@@ -106,7 +106,7 @@ class MemberFetcher extends Fetcher
             ->from('work_members_members', 'm')
             ->innerJoin('m', 'work_projects_project_memberships', 'ms', 'ms.member_id = m.id')
             ->innerJoin('ms', 'work_projects_project_membership_departments', 'msd', 'msd.membership_id = ms.id')
-            ->innerJoin('msd', 'work_projects_project_departments', 'd', 'd.id = msd.department_id')
+            ->innerJoin('msd', 'work_projects_departments', 'd', 'd.id = msd.department_id')
             ->andWhere('m.status = :status AND ms.project_id = :project')
             ->setParameter(':status', Status::ACTIVE)
             ->setParameter(':project', $project)
