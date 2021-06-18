@@ -42,4 +42,13 @@ class TaskRepository
     {
         return new Id((int)$this->connection->executeQuery('SELECT nextval(\'work_projects_tasks_seq\')'));
     }
+
+    /**
+     * @param Id $id
+     * @return Task[]
+     */
+    public function allByParent(Id $id): array
+    {
+        return $this->repo->findBy(['parent' => $id->getValue()]);
+    }
 }

@@ -18,6 +18,21 @@ class ProjectFetcher extends Fetcher
             ->fetchOne();
     }
 
+    public function allList(): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name'
+            )
+            ->from('work_projects_projects')
+            ->orderBy('sort');
+
+        $stmt = $this->getStatement($qb);
+
+        return array_column($stmt->fetchAllAssociative(),'name','id');
+    }
+
     /**
      * @param Filter $filter
      * @param int $page
