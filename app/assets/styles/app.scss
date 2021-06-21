@@ -28,6 +28,25 @@
   background: #fff;
   box-shadow: 0 0 2px rgba(0,0,0,0.1);
 }
+.card {
+   &> .table-bordered {
+     border: none;
+     margin-top: -1px;
+
+     th:first-child, td:first-child {
+       border-left: none;
+     }
+
+     th:last-child, td:last-child {
+       border-right: none;
+     }
+
+     th, td {
+       border-bottom: none;
+     }
+   }
+ }
+
 
 .controls {
   display: flex;
