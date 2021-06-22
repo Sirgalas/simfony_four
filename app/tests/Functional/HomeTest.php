@@ -8,10 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HomeTest extends WebTestCase
 {
-    /**
-     * @test
-     */
-    public function guest(): void
+    public function testGuest(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');
@@ -20,14 +17,28 @@ class HomeTest extends WebTestCase
         $this->assertSame('http://localhost/login', $client->getResponse()->headers->get('Location'));
     }
 
-    public function success(): void
+    public function testUser(): void
     {
         $client = static::createClient([], [
-            'PHP_AUTH_USER' => 'admin@app.test',
-            'PHP_AUTH_PW' => 'password'
+            'PHP_AUTH_USER' => 'auth-user@app.test',
+            'PHP_AUTH_PW' => 'password',
+        ]);
+        dump($client);
+        $crawler = $client->request('GET', '/');
+
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertContains('Home', $crawler->filter('title')->text());
+    }
+
+    public function testAdmin(): void
+    {
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'auth-admin@app.test',
+            'PHP_AUTH_PW' => 'password',
         ]);
         $crawler = $client->request('GET', '/');
+
         $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertSame('Hello!', $crawler->filter('h1')->text());
+        $this->assertContains('Home', $crawler->filter('title')->text());
     }
 }
