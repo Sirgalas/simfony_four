@@ -68,7 +68,6 @@ class UsersController extends AbstractController
 
         $form = $this->createForm(Create\Form::class, $command);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);

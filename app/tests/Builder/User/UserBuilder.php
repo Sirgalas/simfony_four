@@ -64,7 +64,19 @@ class UserBuilder
         $clone->role = $role;
         return $clone;
     }
+    public function withId(Id $id): self
+    {
+        $clone = clone $this;
+        $clone->id = $id;
+        return $clone;
+    }
 
+    public function withName(Name $name): self
+    {
+        $clone = clone $this;
+        $clone->name = $name;
+        return $clone;
+    }
 
 
     public function build():User
