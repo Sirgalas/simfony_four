@@ -3,17 +3,30 @@ declare(strict_types=1);
 
 namespace App\ReadModel\Work\Projects\Task;
 
+use App\Model\Work\Entity\Projects\Task\Task;
 use App\ReadModel\Fetcher;
 
 use App\ReadModel\Work\Projects\Task\Filter\Filter;
 use Doctrine\DBAL\Connection;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Pagination\SlidingPagination;
 use Knp\Component\Pager\PaginatorInterface;
 
 class TaskFetcher extends Fetcher
 {
+    public function __construct(Connection $connection, EntityManagerInterface $em, PaginatorInterface $paginator)
+    {
+        parent::__construct($connection, $em, $paginator);
+        $this->repository = $em->getRepository(Task::class);
+    }
+
+    public function find(string $id): ?Task
+    {
+        return $this->repository->find($id);
+    }
+
     /**
      * @param Filter $filter
      * @param int $page

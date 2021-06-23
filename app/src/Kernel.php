@@ -2,14 +2,23 @@
 
 namespace App;
 
+use App\Container\Work\ProcessorCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+
+    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+
+    protected function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ProcessorCompilerPass());
+    }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
