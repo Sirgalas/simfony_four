@@ -118,6 +118,7 @@ class UsersController extends AbstractController
      * @Route("/{id}", name=".show")
      * @param User $user
      * @return Response
+     * @IsGranted("ROLE_MANAGE_USERS")
      */
     public function show(User $user, MemberFetcher $members): Response
     {

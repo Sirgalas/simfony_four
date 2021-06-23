@@ -1,4 +1,7 @@
 {
+    "cebe/markdown": {
+        "version": "1.2.1"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
@@ -100,6 +103,21 @@
     "egulias/email-validator": {
         "version": "3.1.1"
     },
+    "exercise/htmlpurifier-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "4667fd2103dc4645d234591e1c85f727c6fe0d11"
+        },
+        "files": [
+            "config/packages/exercise_html_purifier.yaml"
+        ]
+    },
+    "ezyang/htmlpurifier": {
+        "version": "v4.13.0"
+    },
     "finesse/swiftmailer-defaults-plugin": {
         "version": "v2.0.3"
     },
@@ -156,6 +174,9 @@
     },
     "league/oauth2-facebook": {
         "version": "2.0.5"
+    },
+    "liip/test-fixtures-bundle": {
+        "version": "2.0.0-alpha5"
     },
     "monolog/monolog": {
         "version": "2.2.0"

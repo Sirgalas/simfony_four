@@ -80,6 +80,11 @@ diff:
 test:
 	docker-compose run --rm php-cli php ./vendor/bin/phpunit
 
+test-unit:
+	docker-compose run --rm php-cli php ./vendor/bin/phpunit --testsuite=unit
+test:
+	docker-compose run --rm php-cli php ./vendor/bin/phpunit --testsuite=unit
+
 build-production:
 	docker build --pull --file=./docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
 	docker build --pull --file=./docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager

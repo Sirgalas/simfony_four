@@ -20,7 +20,7 @@ class ShowTest extends DbWebTestCase
 
     public function testUser(): void
     {
-        $this->client->setServerParameters(AuthFixture::adminCredentials());
+        $this->client->setServerParameters(AuthFixture::userCredentials());
         $this->client->request('GET', '/users/' . UsersFixture::EXISTING_ID);
 
         $this->assertSame(403, $this->client->getResponse()->getStatusCode());
@@ -33,7 +33,7 @@ class ShowTest extends DbWebTestCase
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertContains('Users', [$crawler->filter('title')->text()]);
-        $this->assertContains('Show User', [$crawler->filter('table')->text()]);
+        $this->assertContains('Show User', [$crawler->filter('table tr')->children()->last()->text()]);
     }
 
     public function testNotFound(): void
