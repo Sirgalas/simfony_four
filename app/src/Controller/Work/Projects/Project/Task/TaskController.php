@@ -11,7 +11,6 @@ use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Project\ProjectAccess;
 use App\Controller\ErrorHandler;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/work/projects/{project_id}/tasks", name="work.projects.project.tasks")
  * @ParamConverter("project", options={"id" = "project_id"})
- * @Entity("task", expr="repository.findOneBy({'project': project_id, 'id': id})")
  */
 class TaskController extends AbstractController
 {
@@ -85,8 +83,8 @@ class TaskController extends AbstractController
             $filter->forExecutor($this->getUser()->getId()),
             $request->query->getInt('page', 1),
             self::PER_PAGE,
-            $request->query->get('sort', 't.date'),
-            $request->query->get('direction', 'desc')
+            $request->query->get('sort'),
+            $request->query->get('direction')
         );
 
         return $this->render('app/work/projects/tasks/index.html.twig', [
@@ -115,8 +113,8 @@ class TaskController extends AbstractController
             $filter->forAuthor($this->getUser()->getId()),
             $request->query->getInt('page', 1),
             self::PER_PAGE,
-            $request->query->get('sort', 't.date'),
-            $request->query->get('direction', 'desc')
+            $request->query->get('sort'),
+            $request->query->get('direction')
         );
 
         return $this->render('app/work/projects/tasks/index.html.twig', [
