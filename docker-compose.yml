@@ -22,6 +22,7 @@ services:
       - db
       - mailer
       - redis
+      - storage
     networks:
       - four
   php-cli:
@@ -35,6 +36,7 @@ services:
       - db
       - mailer
       - redis
+      - storage
     volumes:
       - ./app:/app
       - composer:/root/.composer/cache
@@ -83,6 +85,22 @@ services:
     command: redis-server --requirepass secret
     networks:
       - four
+  storage:
+    build:
+      context: ./storage/docker/development
+      dockerfile: nginx.docker
+    volumes:
+      - ./storage:/app
+    ports:
+      - "8204:80"
+  storage-ftp:
+    image: stilliard/pure-ftpd
+    environment:
+      FTP_USER_NAME: app
+      FTP_USER_PASS: secret
+      FTP_USER_HOME: /app
+    volumes:
+      - ./storage/public:/app
 volumes:
   db:
   composer:
