@@ -23,6 +23,7 @@
         "knplabs/knp-menu-bundle": "^3.1",
         "knplabs/knp-paginator-bundle": "^5.5",
         "knpuniversity/oauth2-client-bundle": "^2.8",
+        "league/flysystem-bundle": "^2.0",
         "league/oauth2-facebook": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpstan-phpunit": "^0.12.16",

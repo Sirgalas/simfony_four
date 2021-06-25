@@ -15,6 +15,10 @@ services:
       DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
       MAILER_URL: null://localhost
       OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
+      STORAGE_BASE_URL: ${STORAGE_BASE_URL}
+      STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
+      STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
+      STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
       REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
     depends_on:
       - postgres
@@ -25,6 +29,10 @@ services:
       DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
       MAILER_URL: null://localhost
       OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
+      STORAGE_BASE_URL: ${STORAGE_BASE_URL}
+      STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
+      STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
+      STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
       REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
     depends_on:
       - postgres
