@@ -185,6 +185,9 @@
             "var/storage/.gitignore"
         ]
     },
+    "league/flysystem-ftp": {
+        "version": "2.0.8"
+    },
     "league/mime-type-detection": {
         "version": "1.7.0"
     },

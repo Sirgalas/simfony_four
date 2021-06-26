@@ -74,7 +74,7 @@ class Task
     private $content;
     /**
      * @var ArrayCollection|File[]
-     * @ORM\OneToMany(targetEntity="App\Model\Work\Entity\Projects\Task\File\File", mappedBy="task", orphanRemoval=true, cascade={"all"})
+     * @ORM\OneToMany(targetEntity="App\Model\Work\Entity\Projects\Task\Files\File", mappedBy="task", orphanRemoval=true, cascade={"all"})
      * @ORM\OrderBy({"date" = "ASC"})
      */
     private $files;

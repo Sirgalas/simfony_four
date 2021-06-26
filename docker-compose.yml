@@ -93,6 +93,8 @@ services:
       - ./storage:/app
     ports:
       - "8204:80"
+    networks:
+      - four
   storage-ftp:
     image: stilliard/pure-ftpd
     environment:
@@ -101,6 +103,8 @@ services:
       FTP_USER_HOME: /app
     volumes:
       - ./storage/public:/app
+    networks:
+      - four
 volumes:
   db:
   composer:

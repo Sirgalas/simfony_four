@@ -35,7 +35,7 @@ class TaskFetcher extends Fetcher
      * @param string $direction
      * @return PaginationInterface
      */
-    public function all(Filter $filter, int $page, int $size, string $sort, ?string $direction): PaginationInterface
+    public function all(Filter $filter, int $page, int $size, ?string $sort, ?string $direction): PaginationInterface
     {
         if (!\in_array($sort, [null, 't.id', 't.date', 'author_name', 'project_name', 'name', 't.type', 't.plan_date', 't.progress', 't.priority', 't.status'], true)) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
@@ -111,11 +111,18 @@ class TaskFetcher extends Fetcher
             $qb->setParameter(':executor', $filter->executor);
         }
 
-        if (!\in_array($sort, ['t.id', 't.date', 'author_name', 'project_name', 'name', 't.type', 't.plan_date', 't.progress', 't.priority', 't.status'], true)) {
-            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
+        if ($filter->roots) {
+            $qb->andWhere('t.parent_id IS NULL');
         }
 
-        $qb->orderBy($sort ?: 't.id', $direction === 'desc' ? 'desc' : 'asc');
+        if (!$sort) {
+            $sort = 't.id';
+            $direction = $direction ?: 'desc';
+        } else {
+            $direction = $direction ?: 'asc';
+        }
+
+        $qb->orderBy($sort, $direction);
 
         /** @var SlidingPagination $pagination */
         $pagination = $this->paginator->paginate($qb, $page, $size);

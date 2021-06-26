@@ -3,15 +3,12 @@
 {% block title %}{{ task.name }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.projects.project.show', {'id': project.id}) }}">{{ project.name }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.projects.project.tasks', {'project_id': project.id}) }}">Tasks</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.projects.tasks.show', {'id': task.id}) }}">{{ task.name }}</a></li>
-        <li class="breadcrumb-item active">Files</li>
-    </ol>
+    <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('work.projects.project.show', {'id': project.id}) }}">{{ project.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('work.projects.project.tasks', {'project_id': project.id}) }}">Tasks</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('work.projects.tasks.show', {'id': task.id}) }}">{{ task.name }}</a></li>
+    <li class="breadcrumb-item active">Files</li>
 {% endblock %}
 
 {% block body %}

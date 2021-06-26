@@ -20,10 +20,10 @@ class FileUploader
 
     public function upload(UploadedFile $file): File
     {
-        $path = date('Y/m/d');
+        $path = DIRECTORY_SEPARATOR.date('Y'.DIRECTORY_SEPARATOR.'m'.DIRECTORY_SEPARATOR.'d');
         $name = Uuid::uuid4()->toString() . '.' . $file->getClientOriginalExtension();
 
-        $this->storage->createDir($path);
+        //$this->storage->createDirectory($path);
         $stream = fopen($file->getRealPath(), 'rb+');
         $this->storage->writeStream($path . '/' . $name, $stream);
         fclose($stream);
@@ -35,4 +35,5 @@ class FileUploader
     {
         return $this->basUrl . '/' . $path;
     }
+
 }
