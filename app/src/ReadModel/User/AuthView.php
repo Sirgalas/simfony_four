@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\ReadModel\User;
 
-
 use  App\ReadModel\AbstractCommand;
 use Symfony\Component\Serializer\Annotation\Groups;
 

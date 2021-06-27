@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Model\Work\UseCase\Projects\Task\Files;
 use App\Service\Uploader\FileUploader;
+use App\Model\Comment\UseCase\Comment;
+use App\ReadModel\Work\Projects\Task\CommentFetcher;
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -481,10 +483,12 @@ class TasksController extends AbstractController
      * @param Request $request
      * @param MemberFetcher $members
      * @param TaskFetcher $tasks
+     * @param CommentFetcher $comments
      * @param Status\Handler $statusHandler
      * @param Progress\Handler $progressHandler
      * @param Type\Handler $typeHandler
      * @param Priority\Handler $priorityHandler
+     * @param Comment\Create\Handler $commentHandler
      * @return Response
      */
     public function show(
@@ -492,10 +496,12 @@ class TasksController extends AbstractController
         Request $request,
         MemberFetcher $members,
         TaskFetcher $tasks,
+        CommentFetcher $comments,
         Status\Handler $statusHandler,
         Progress\Handler $progressHandler,
         Type\Handler $typeHandler,
-        Priority\Handler $priorityHandler
+        Priority\Handler $priorityHandler,
+        Comment\Create\Handler $commentHandler
     ): Response
     {
         $this->denyAccessUnlessGranted(TaskAccess::VIEW, $task);
@@ -556,15 +562,35 @@ class TasksController extends AbstractController
             }
         }
 
+        $commentCommand = new Comment\Create\Command(
+            $this->getUser()->getId(),
+            Task::class,
+            (string)$task->getId()->getValue()
+        );
+
+        $commentForm = $this->createForm(Comment\Create\Form::class, $commentCommand);
+        $commentForm->handleRequest($request);
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            try {
+                $commentHandler->handle($commentCommand);
+                return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
+            } catch (\DomainException $e) {
+                $this->errors->handle($e);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
         return $this->render('app/work/projects/tasks/show.html.twig', [
             'project' => $task->getProject(),
             'task' => $task,
             'member' => $member,
             'children' => $tasks->childrenOf($task->getId()->getValue()),
+            'comments' => $comments->allForTask($task->getId()->getValue()),
             'statusForm' => $statusForm->createView(),
             'progressForm' => $progressForm->createView(),
             'typeForm' => $typeForm->createView(),
             'priorityForm' => $priorityForm->createView(),
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 
