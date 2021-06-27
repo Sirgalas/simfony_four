@@ -193,4 +193,50 @@ class TaskFetcher extends Fetcher
         $stmt = $this->getStatement($qb);
         return $stmt->fetchAllAssociative();
     }
+
+    public function lastOwn(string $member, int $limit): array
+    {
+        $qb = $this
+            ->connection->createQueryBuilder()
+            ->select(
+                't.id',
+                't.project_id',
+                'p.name project_name',
+                't.name',
+                't.status'
+            )
+            ->from('work_projects_tasks', 't')
+            ->innerJoin('t', 'work_projects_projects', 'p', 't.project_id = p.id')
+            ->andWhere('t.author_id = :member')
+            ->setParameter(':member', $member)
+            ->orderBy('date', 'desc')
+            ->setMaxResults($limit);
+
+        $stmt = $this->getStatement($qb);
+
+        return $stmt->fetchAllAssociative();
+    }
+    public function lastForMe(string $member, int $limit): array
+    {
+        $qb = $this
+            ->connection->createQueryBuilder()
+            ->select(
+                't.id',
+                't.project_id',
+                'p.name project_name',
+                't.name',
+                't.status'
+            )
+            ->from('work_projects_tasks', 't')
+            ->innerJoin('t', 'work_projects_projects', 'p', 't.project_id = p.id')
+            ->innerJoin('t', 'work_projects_tasks_executors', 'e', 'e.task_id = t.id')
+            ->andWhere('e.member_id = :executor')
+            ->setParameter(':executor', $member)
+            ->orderBy('date', 'desc')
+            ->setMaxResults($limit);
+
+        $stmt = $this->getStatement($qb);
+
+        return $stmt->fetchAllAssociative();
+    }
 }
