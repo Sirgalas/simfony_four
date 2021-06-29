@@ -15,7 +15,7 @@ class SetChildOfTest extends TestCase
     /**
      * @test
      */
-    public function testSuccess(): void
+    public function success(): void
     {
         $group = (new GroupBuilder())->build();
         $member = (new MemberBuilder())->build($group);
@@ -26,21 +26,6 @@ class SetChildOfTest extends TestCase
         $task->setChildOf($parent);
 
         self::assertEquals($parent, $task->getParent());
-    }
-
-    /**
-     * @test
-     */
-    public function empty(): void
-    {
-        $group = (new GroupBuilder())->build();
-        $member = (new MemberBuilder())->build($group);
-        $project = (new ProjectBuilder())->build();
-        $task = (new TaskBuilder())->build($project, $member);
-
-        $task->setChildOf(null);
-
-        self::assertNull($task->getParent());
     }
 
     /**

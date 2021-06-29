@@ -9,8 +9,9 @@ use App\Tests\Builder\Work\Projects\ProjectBuilder;
 use App\Tests\Builder\Work\Projects\TaskBuilder;
 use PHPUnit\Framework\TestCase;
 
-class PlanTest extends TestCase
+class SetRootTest extends TestCase
 {
+
     /**
      * @test
      */
@@ -20,10 +21,14 @@ class PlanTest extends TestCase
         $member = (new MemberBuilder())->build($group);
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
+        $parent = (new TaskBuilder())->build($project, $member);
 
-        $task->setPlan($date = new \DateTimeImmutable());
+        $task->setChildOf($parent);
 
-        self::assertEquals($date, $task->getPlanDate());
+        self::assertEquals($parent, $task->getParent());
+
+        $task->setRoot();
+
+        self::assertNull($task->getParent());
     }
-
 }

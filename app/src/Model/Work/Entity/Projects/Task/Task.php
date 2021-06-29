@@ -315,6 +315,11 @@ class Task
         $this->planDate = $date;
     }
 
+    public function removePlan(): void
+    {
+        $this->planDate = null;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -370,19 +375,25 @@ class Task
         return $this->parent;
     }
 
-    public function setChildOf(?Task $parent): void
+
+    public function setChildOf(Task $parent): void
     {
-        if ($parent) {
-            $current = $parent;
-            do {
-                if ($current === $this) {
-                    throw new \DomainException('Cyclomatic children.');
-                }
-            }
-            while ($current && $current = $current->getParent());
+        if ($parent === $this->parent) {
+            return;
         }
 
-        $this->parent = $parent;
+        $current = $parent;
+        do {
+            if ($current === $this) {
+                throw new \DomainException('Cyclomatic children.');
+            }
+        }
+        while ($current && $current = $current->getParent());
+    }
+
+    public function setRoot(): void
+    {
+        $this->parent = null;
     }
 
     public function getStatus(): Status
