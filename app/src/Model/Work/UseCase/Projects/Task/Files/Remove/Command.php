@@ -7,6 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Command
 {
+
+    /**
+     * @Assert\NotBlank()
+     */
+    public $actor;
     /**
      * @Assert\NotBlank()
      */
@@ -16,9 +21,9 @@ class Command
      */
     public $file;
 
-    public function __construct(int $id, string $file)
+    public function __construct(string $actor,string $file)
     {
-        $this->id = $id;
+        $this->actor = $actor;
         $this->file = $file;
     }
 }

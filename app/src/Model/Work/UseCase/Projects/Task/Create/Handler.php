@@ -48,19 +48,17 @@ class Handler
             );
 
             if ($parent) {
-                $task->setChildOf($parent);
+                $task->setChildOf($member, $date,$parent);
             }
 
             if ($command->parent) {
                 $parent = $this->tasks->get(new Id($command->parent));
-                $task->setChildOf($parent);
+                $task->setChildOf($member, $date,$parent);
             }
 
             if ($command->plan) {
-                $task->setPlan($command->plan);
+                $task->setPlan($member, $date,$command->plan);
             }
-
-            $date = $date->modify('+1 sec');
 
             $this->tasks->add($task);
         }

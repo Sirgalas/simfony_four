@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 class StartTest extends TestCase
 {
-    public function testSuccess(): void
+    /**
+     * @test
+     */
+    public function success(): void
     {
         $group = (new GroupBuilder())->build();
         $member = (new MemberBuilder())->build($group);
@@ -25,18 +28,21 @@ class StartTest extends TestCase
         self::assertEquals($date, $task->getStartDate());
     }
 
-    public function testAlready(): void
+    /**
+     * @test
+     */
+    public function already(): void
     {
         $group = (new GroupBuilder())->build();
         $member = (new MemberBuilder())->build($group);
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->assignExecutor($member);
+        $task->assignExecutor($member, new \DateTimeImmutable(), $member);
         $task->start($date = new \DateTimeImmutable());
 
         $this->expectExceptionMessage('Task is already started.');
-        $task->start($date);
+        $task->start($member, $date);
     }
 
     public function testWithoutExecutors(): void
@@ -47,6 +53,6 @@ class StartTest extends TestCase
         $task = (new TaskBuilder())->build($project, $member);
 
         $this->expectExceptionMessage('Task does not contain executors.');
-        $task->start(new \DateTimeImmutable());
+        $task->start($member, new \DateTimeImmutable());
     }
 }

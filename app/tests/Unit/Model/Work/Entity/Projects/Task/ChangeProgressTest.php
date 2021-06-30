@@ -21,7 +21,7 @@ class ChangeProgressTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->changeProgress($progress = 25);
+        $task->changeProgress($member, new \DateTimeImmutable(),$progress = 25);
 
         self::assertEquals($progress, $task->getProgress());
     }
@@ -36,10 +36,10 @@ class ChangeProgressTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->changeProgress($progress = 25);
+        $task->changeProgress($member, new \DateTimeImmutable(),$progress = 25);
 
         $this->expectExceptionMessage('Progress is already same.');
-        $task->changeProgress($progress);
+        $task->changeProgress($member, new \DateTimeImmutable(),$progress);
     }
 
     /**
@@ -53,6 +53,6 @@ class ChangeProgressTest extends TestCase
         $task = (new TaskBuilder())->build($project, $member);
 
         $this->expectException(\InvalidArgumentException::class);
-        $task->changeProgress(200);
+        $task->changeProgress($member, new \DateTimeImmutable(),200);
     }
 }

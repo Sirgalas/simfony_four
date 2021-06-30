@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 class MoveTest extends TestCase
 {
-    public function testSuccess(): void
+    /**
+     * @test
+     */
+    public function success(): void
     {
         $group = (new GroupBuilder())->build();
         $member = (new MemberBuilder())->build($group);
@@ -20,12 +23,15 @@ class MoveTest extends TestCase
 
         $destination = (new ProjectBuilder())->build();
 
-        $task->move($destination);
+        $task->move($member, new \DateTimeImmutable(),$destination);
 
         self::assertEquals($destination, $task->getProject());
     }
 
-    public function testAlready(): void
+    /**
+     * @test
+     */
+    public function already(): void
     {
         $group = (new GroupBuilder())->build();
         $member = (new MemberBuilder())->build($group);
@@ -33,6 +39,6 @@ class MoveTest extends TestCase
         $task = (new TaskBuilder())->build($project, $member);
 
         $this->expectExceptionMessage('Project is already same.');
-        $task->move($project);
+        $task->move($member, new \DateTimeImmutable(),$project);
     }
 }

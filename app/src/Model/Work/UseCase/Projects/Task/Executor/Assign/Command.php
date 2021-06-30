@@ -10,6 +10,10 @@ class Command
     /**
      * @Assert\NotBlank()
      */
+    public $actor;
+    /**
+     * @Assert\NotBlank()
+     */
     public $id;
     /**
      * @var array
@@ -17,7 +21,7 @@ class Command
      */
     public $members;
 
-    public function __construct(int $id)
+    public function __construct(string $actor, int $id)
     {
         $this->id = $id;
     }

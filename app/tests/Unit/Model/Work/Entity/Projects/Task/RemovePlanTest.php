@@ -21,11 +21,11 @@ class RemovePlanTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->setPlan($date = new \DateTimeImmutable());
+        $task->setPlan($member, new \DateTimeImmutable(),$date = new \DateTimeImmutable());
 
         self::assertEquals($date, $task->getPlanDate());
 
-        $task->removePlan();
+        $task->removePlan($member, new \DateTimeImmutable());
 
         self::assertNull($task->getPlanDate());
     }
