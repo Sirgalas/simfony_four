@@ -42,7 +42,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
             $date = $date->modify('+' . $faker->numberBetween(1, 3) . 'days 3minutes');
 
             if ($faker->boolean(40)) {
-                $task->plan($actor, $date, $date->modify('+' . $faker->numberBetween(1, 30) . 'days'));
+                $task->setPlan($actor, $date, $date->modify('+' . $faker->numberBetween(1, 30) . 'days'));
             }
 
             $memberships = $project->getMemberships();

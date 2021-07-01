@@ -21,7 +21,7 @@ class Command
      */
     public $file;
 
-    public function __construct(string $actor,string $file)
+    public function __construct(string $actor, int $id, string $file)
     {
         $this->actor = $actor;
         $this->file = $file;

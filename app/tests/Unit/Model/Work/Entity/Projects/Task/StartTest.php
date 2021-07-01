@@ -39,7 +39,7 @@ class StartTest extends TestCase
         $task = (new TaskBuilder())->build($project, $member);
 
         $task->assignExecutor($member, new \DateTimeImmutable(), $member);
-        $task->start($date = new \DateTimeImmutable());
+        $task->start($member, $date = new \DateTimeImmutable());
 
         $this->expectExceptionMessage('Task is already started.');
         $task->start($member, $date);

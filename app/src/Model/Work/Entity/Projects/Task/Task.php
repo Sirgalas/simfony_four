@@ -144,6 +144,7 @@ class Task
         $this->setStatus(Status::new());
         $this->files = new ArrayCollection();
         $this->executors = new ArrayCollection();
+        $this->changes = new ArrayCollection();
         $this->addChange($author, $date, Set::forNewTask($project->getId(), $name, $content, $type, $priority));
     }
 
@@ -203,6 +204,7 @@ class Task
             throw new \DomainException('Type is already same.');
         }
         $this->type = $type;
+        $this->addChange($actor, $date, Set::fromType($type));
     }
 
     public function changeStatus(Member $actor, \DateTimeImmutable $date, Status $status): void
@@ -212,7 +214,7 @@ class Task
         }
         $this->status = $status;
         if ($status->isDone() && $this->progress !== 100) {
-            $this->changeProgress(100);
+            $this->changeProgress($actor,$date,100);
         }
         if (!$status->isNew() && !$this->startDate) {
             $this->setStartDate($date);
@@ -481,6 +483,7 @@ class Task
 
     private function addChange(Member $actor, \DateTimeImmutable $date, Set $set): void
     {
+
         if ($last = $this->changes->last()) {
             /** @var Change $last */
             $next = $last->getId()->next();

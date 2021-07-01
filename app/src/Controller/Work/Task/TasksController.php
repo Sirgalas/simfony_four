@@ -32,6 +32,9 @@ use App\Model\Work\UseCase\Projects\Task\Files;
 use App\Service\Uploader\FileUploader;
 use App\Model\Comment\UseCase\Comment;
 use App\ReadModel\Work\Projects\Task\CommentFetcher;
+use App\ReadModel\Work\Projects\Action\ActionFetcher;
+use App\ReadModel\Work\Projects\Action\Feed\Feed;
+
 
 /**
  * @Route("/work/projects/tasks", name="work.projects.tasks")
@@ -501,6 +504,7 @@ class TasksController extends AbstractController
         MemberFetcher $members,
         TaskFetcher $tasks,
         CommentFetcher $comments,
+        ActionFetcher $action,
         Status\Handler $statusHandler,
         Progress\Handler $progressHandler,
         Type\Handler $typeHandler,
@@ -584,12 +588,17 @@ class TasksController extends AbstractController
             }
         }
 
+        $feed = new Feed(
+            $action->allForTask($task->getId()->getValue()),
+            $comments->allForTask($task->getId()->getValue())
+        );
+
         return $this->render('app/work/projects/tasks/show.html.twig', [
             'project' => $task->getProject(),
             'task' => $task,
             'member' => $member,
             'children' => $tasks->childrenOf($task->getId()->getValue()),
-            'comments' => $comments->allForTask($task->getId()->getValue()),
+            'feed' => $feed,
             'statusForm' => $statusForm->createView(),
             'progressForm' => $progressForm->createView(),
             'typeForm' => $typeForm->createView(),
@@ -659,7 +668,7 @@ class TasksController extends AbstractController
 
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
-        $command = new Files\Remove\Command($task->getId()->getValue(), $file_id);
+        $command = new Files\Remove\Command($this->getUser()->getId(), $task->getId()->getValue(), $file_id);
 
         try {
             $handler->handle($command);
