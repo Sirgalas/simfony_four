@@ -30,8 +30,8 @@ class Handler
             $parent = $this->tasks->get(new Id($command->parent));
             $task->setChildOf($actor, new \DateTimeImmutable(), $parent);
         } else {
-            $task->setRoot();
+            $task->setRoot($actor, new \DateTimeImmutable());
         }
-        $this->flusher->flush();
+        $this->flusher->flush($task);
     }
 }

@@ -28,6 +28,6 @@ class Handler
 
         $task->changeProgress($actor, new \DateTimeImmutable(), $command->progress);
 
-        $this->flusher->flush();
+        $this->flusher->flush($task);
     }
 }
