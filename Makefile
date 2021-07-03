@@ -82,26 +82,30 @@ test:
 
 test-unit:
 	docker-compose run --rm php-cli php ./vendor/bin/phpunit --testsuite=unit
-test:
-	docker-compose run --rm php-cli php ./vendor/bin/phpunit --testsuite=unit
+
 
 build-production:
 	docker build --pull --file=./docker/nginx.docker --tag ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG} manager
 	docker build --pull --file=./docker/php-fpm.docker --tag ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG} manager
 	docker build --pull --file=./docker/php-cli.docker --tag ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG} manager
 	docker build --pull --file=./docker/production/redis.docker --tag ${REGISTRY_ADDRESS}/redis:${IMAGE_TAG} manager
+	docker build --pull --file=centrifugo/docker/production/centrifugo.docker --tag ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG} centrifugo
 
 push-production:
 	docker push ${REGISTRY_ADDRESS}/nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/redis:${IMAGE_TAG}
+	docker push ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG}
 
 deploy-production:
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
 	scp -o ${PRODUCTION_PORT} docker-compose-production.yml ${PRODUCTION_HOST}:docker-compose.yml
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_WS_HOST=${CENTRIFUGO_WS_HOST}" >> .env'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_API_KEY=${CENTRIFUGO_API_KEY}" >> .env'
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_SECRET=${CENTRIFUGO_SECRET}" >> .env'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
 	ssh -o ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
 	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> .env'

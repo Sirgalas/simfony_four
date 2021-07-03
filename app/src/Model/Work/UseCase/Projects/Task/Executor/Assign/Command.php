@@ -23,6 +23,7 @@ class Command
 
     public function __construct(string $actor, int $id)
     {
+        $this->actor = $actor;
         $this->id = $id;
     }
 }

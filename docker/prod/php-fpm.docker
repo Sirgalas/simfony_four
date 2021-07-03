@@ -10,7 +10,11 @@ WORKDIR /app
 
 COPY ./composer.json ./composer.lock ./
 
-FROM node:16.2-alpine AS node-builder
+RUN composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader
+
+######################
+
+FROM node:11.13-alpine AS node-builder
 
 WORKDIR /app
 
@@ -22,17 +26,29 @@ COPY ./ ./
 
 RUN npm run build
 
-RUN composer install --no-dev --prefer-dist --optimize-autoloader
+######################
 
 FROM php:7.2-fpm
 
-RUN docker-php-ext-install opcache
+RUN pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis
 
-COPY ./docker/prod/php/default.ini /usr/local/etc/php/conf.d/default.ini
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql opcache
+
+COPY ./docker/production/php/default.ini /usr/local/etc/php/conf.d/default.ini
 
 WORKDIR /app
 
-COPY --from=builder /app ./
 COPY --from=php-cli-builder /app ./
 COPY --from=node-builder /app/public/build ./public/build
 COPY ./ ./
+
+ENV APP_ENV prod
+
+RUN php bin/console assets:install
+
+RUN php bin/console cache:warmup \
+    && chown -R www-data:www-data ./var

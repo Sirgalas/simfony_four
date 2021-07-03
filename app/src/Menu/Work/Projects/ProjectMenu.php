@@ -32,8 +32,8 @@ class ProjectMenu
                 ['route' => 'work.projects.project.show'],
                 ['pattern' => '/^work.projects.project.show\..+/']
             ])
-            ->setAttribute('class', 'c-sidebar-nav-item')
-            ->setLinkAttribute('class', 'c-sidebar-nav-link');
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link');
 
         $menu
             ->addChild('Actions', [
@@ -75,8 +75,8 @@ class ProjectMenu
                     ['route' => 'work.projects.project.settings'],
                     ['pattern' => '/^work.projects.project.settings\..+/']
                 ])
-                ->setAttribute('class', 'c-sidebar-nav-item')
-                ->setLinkAttribute('class', 'c-sidebar-nav-link');
+                ->setAttribute('class', 'nav-item')
+                ->setLinkAttribute('class', 'nav-link');
         }
 
         return $menu;

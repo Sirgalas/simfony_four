@@ -22,7 +22,9 @@ services:
       - db
       - mailer
       - redis
+      - queue-redis
       - storage
+      - centrifugo
     networks:
       - four
   php-cli:
@@ -36,7 +38,9 @@ services:
       - db
       - mailer
       - redis
+      - queue-redis
       - storage
+      - centrifugo
     volumes:
       - ./app:/app
       - composer:/root/.composer/cache
@@ -76,15 +80,44 @@ services:
     networks:
       - four
   redis:
-    image: redis
+    image: redis:6.2-alpine
     restart: always
     ports:
       - "8203:6379"
     volumes:
       - redis:/data
-    command: redis-server --requirepass secret
+    command:
+      - 'redis-server'
+      - '--databases 2'
+      - '--save 900 1'
+      - '--save 300 10'
+      - '--save 60 10000'
+      - '--requirepass secret'
     networks:
       - four
+  queue-worker:
+    build:
+      context: ./docker/dev
+      dockerfile: php-cli.docker
+    volumes:
+      - ./app:/app
+      - composer:/root/.composer/cache
+    depends_on:
+      - db
+      - redis
+      - queue-redis
+      - storage
+      - mailer
+      - centrifugo
+    networks:
+      - four
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && php bin/console messenger:consume async -vv"
+  queue-redis:
+    image: redis:5.0-alpine
+    volumes:
+      - queue-redis:/data
+    networks:
+          - four
   storage:
     build:
       context: ./storage/docker/development
@@ -105,10 +138,28 @@ services:
       - ./storage/public:/app
     networks:
       - four
+  centrifugo:
+    image: centrifugo/centrifugo:v2.8
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      CENTRIFUGO_SECRET: secret
+      CENTRIFUGO_API_KEY: secret
+    volumes:
+      - ./centrifugo/docker/development/centrifugo:/centrifugo
+    ports:
+      - "8205:8000"
+    command: centrifugo --admin --admin_insecure
+    networks:
+      - four
+
 volumes:
   db:
   composer:
   redis:
+  queue-redis:
 
 networks:
   four:

@@ -3,8 +3,6 @@
 {% block title %}{{ task.name }}{% endblock %}
 
 {% block breadcrumbs %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
         <li class="breadcrumb-item">
@@ -12,7 +10,6 @@
         <li class="breadcrumb-item"><a href="{{ path('work.projects.project.tasks', {'project_id': project.id}) }}">Tasks</a>
         </li>
         <li class="breadcrumb-item active">{{ task.name }}</li>
-    </ol>
 {% endblock %}
 
 {% block body %}

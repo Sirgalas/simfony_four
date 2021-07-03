@@ -1,10 +1,8 @@
 FROM php:7.4-fpm
 
-COPY php/php.ini /usr/local/etc/php/php.ini
-RUN pear config-set php_ini /usr/local/etc/php/php.ini\
-&& pecl install xdebug-3.0.0 \
-&& echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-&& docker-php-ext-enable xdebug
+RUN pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis
 
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
@@ -16,8 +14,9 @@ RUN apt-get update \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl
 
-RUN pecl install redis \
-    && docker-php-ext-enable redis.so
+RUN pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis
 
 RUN docker-php-ext-install bcmath\
     && docker-php-ext-configure bcmath

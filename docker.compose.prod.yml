@@ -14,28 +14,73 @@ services:
       APP_SECRET: ${APP_SECRET}
       DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
       MAILER_URL: ${MANAGER_MAILER_URL}
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${MANAGER_REDIS_PASSWORD}
       OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
       STORAGE_BASE_URL: ${STORAGE_BASE_URL}
       STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
       STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
       STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
-      REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
+      #REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
+      MESSENGER_TRANSPORT_DSN: redis://redis:6379/messages?password=${REDIS_PASSWORD}
+      CENTRIFUGO_WS_HOST: ${CENTRIFUGO_WS_HOST}
+      CENTRIFUGO_API_HOST: http://centrifugo:8000
+      CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+      CENTRIFUGO_SECRET: ${CENTRIFUGO_SECRET}
     depends_on:
       - postgres
+      - redis
+      - queue-redis
+      - centrifugo
   php-cli:
     image: ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
     environment:
       APP_SECRET: ${APP_SECRET}
       DATABASE_URL: pgsql://app:${DB_PASSWORD}@postgres:5432/app
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${MANAGER_REDIS_PASSWORD}
       MAILER_URL: ${MANAGER_MAILER_URL}
       OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
       STORAGE_BASE_URL: ${STORAGE_BASE_URL}
       STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
       STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
       STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
-      REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
+      #REDIS_URL: tcp://redis:6379?password=${REDIS_PASSWORD}
+      MESSENGER_TRANSPORT_DSN: redis://queue-redis:6379/messages
+      CENTRIFUGO_WS_HOST: ${CENTRIFUGO_WS_HOST}
+      CENTRIFUGO_API_HOST: http://centrifugo:8000
+      CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+      CENTRIFUGO_SECRET: ${CENTRIFUGO_SECRET}
     depends_on:
       - postgres
+      - redis
+      - queue-redis
+      - centrifugo
+  queue-worker:
+    image: ${REGISTRY_ADDRESS}/php-cli:${IMAGE_TAG}
+    environment:
+      APP_SECRET: ${MANAGER_APP_SECRET}
+      DATABASE_URL: pgsql://app:${DB_PASSWORD}@manager-postgres:5432/app
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${MANAGER_REDIS_PASSWORD}
+      REDIS_URL: tcp://redis:6379?password=${MANAGER_REDIS_PASSWORD}
+      MAILER_URL: ${MAILER_URL}
+      OAUTH_FACEBOOK_SECRET: ${OAUTH_FACEBOOK_SECRET}
+      STORAGE_BASE_URL: ${STORAGE_BASE_URL}
+      STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
+      STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
+      STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
+      MESSENGER_TRANSPORT_DSN: redis://manager-queue-redis:6379/messages
+      CENTRIFUGO_WS_HOST: ${CENTRIFUGO_WS_HOST}
+      CENTRIFUGO_API_HOST: http://centrifugo:8000
+      CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+      CENTRIFUGO_SECRET: ${CENTRIFUGO_SECRET}
+    depends_on:
+      - postgres
+      - redis
+      - queue-redis
+      - centrifugo
+    command: sh -c "sleep 30 && php bin/console messenger:consume async -vv"
   postgres:
     image: ${REGISTRY_ADDRESS}/postgres:${IMAGE_TAG}
     restart: always
@@ -51,11 +96,33 @@ services:
       - ./app:/app
     working_dir: /app
   redis:
-    image: redis:6.0
+    image: redis:6.2-alpine
     restart: always
     volumes:
       - redis:/data
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command:
+       - 'redis-server'
+       - '--databases 2'
+       - '--save 900 1'
+       - '--save 300 10'
+       - '--save 60 10000'
+       - '--requirepass secret'
+  queue-redis:
+    image: redis:5.0-alpine
+    volumes:
+      - manager-queue-redis:/data
+
+    centrifugo:
+      image: ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG}
+      ulimits:
+        nofile:
+          soft: 65536
+          hard: 65536
+      environment:
+        CENTRIFUGO_SECRET: ${CENTRIFUGO_SECRET}
+        CENTRIFUGO_API_KEY: ${CENTRIFUGO_API_KEY}
+      ports:
+        - "8000:8000"
 volumes:
   postgres:
   redis:
