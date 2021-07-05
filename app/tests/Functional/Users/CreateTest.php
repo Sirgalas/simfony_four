@@ -51,6 +51,7 @@ class CreateTest extends DbWebTestCase
     {
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $this->client->request('GET', '/users/create');
+
         $this->client->submitForm('Create', [
             'form[firstName]' => 'Tom',
             'form[lastName]' => 'Bent',
@@ -77,7 +78,6 @@ class CreateTest extends DbWebTestCase
         ]);
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-
 
         $this->assertContains('Значение не должно быть пустым.', [$crawler
             ->filter('#form_firstName')->parents()->first()->filter('.form-error-message')->text()]);

@@ -193,7 +193,6 @@ class Task implements AggregateRoot
         }
         $this->project = $project;
         $this->addChange($actor, $date, Set::fromProject($project->getId()));
-        $this->recordEvent(new Event\TaskTypeChanged($actor->getId(), $this->id, $type));
     }
 
     public function start(Member $actor, \DateTimeImmutable $date): void

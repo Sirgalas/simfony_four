@@ -21,8 +21,8 @@ class StartTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->assignExecutor($member);
-        $task->start($date = new \DateTimeImmutable('+2 days'));
+        $task->assignExecutor($member, new \DateTimeImmutable(), $member);
+        $task->start($member, $date = new \DateTimeImmutable('+2 days'));
 
         self::assertTrue($task->isWorking());
         self::assertEquals($date, $task->getStartDate());

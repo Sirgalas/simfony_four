@@ -44,6 +44,9 @@ composer-install:
 composer-update:
 	docker-compose run --rm php-cli composer update
 
+composer-need-update:
+	docker-compose run --rm php-cli composer outdated
+
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
 
