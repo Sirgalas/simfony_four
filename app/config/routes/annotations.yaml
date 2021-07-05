@@ -6,6 +6,7 @@ api:
     type: annotation
     defaults:
         _format: json
+
 controllers:
     resource: ../../src/Controller/
     type: annotation
