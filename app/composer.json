@@ -27,6 +27,7 @@
         "league/flysystem-bundle": "^2.0",
         "league/flysystem-ftp": "^2.0",
         "league/oauth2-facebook": "^2.0",
+        "nyholm/psr7": "^1.4",
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpstan-phpunit": "^0.12.16",
         "predis/predis": "^1.1",
@@ -61,6 +62,7 @@
         "symfony/webpack-encore-bundle": "^1.11",
         "symfony/yaml": "5.2.*",
         "symfonycasts/verify-email-bundle": "^1.5",
+        "trikoder/oauth2-bundle": "^3.2",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
         "webmozart/assert": "^1.10"

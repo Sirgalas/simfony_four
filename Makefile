@@ -4,7 +4,7 @@ up: docker-up
 down: docker-down
 restart: docker-down docker-up
 restart-clear: docker-down-clear docker-build docker-up
-init: docker-down-clear clear docker-build docker-up wait-db migrations fixtures assets-install composer-install ready
+init: docker-down-clear clear docker-build docker-up oauth-keys wait-db migrations fixtures assets-install composer-install ready
 asset-init: assets-install assets-watch
 app-init: composer-install assets-install migrations fixtures
 
@@ -46,6 +46,12 @@ composer-update:
 
 composer-need-update:
 	docker-compose run --rm php-cli composer outdated
+
+oauth-keys:
+	docker-compose run --rm manager-php-cli mkdir -p var/oauth
+	docker-compose run --rm manager-php-cli openssl genrsa -out var/oauth/private.key 2048
+	docker-compose run --rm manager-php-cli openssl rsa -in var/oauth/private.key -pubout -out var/oauth/public.key
+	docker-compose run --rm manager-php-cli chmod 644 var/oauth/private.key var/oauth/public.key
 
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
