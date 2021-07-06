@@ -48,10 +48,10 @@ composer-need-update:
 	docker-compose run --rm php-cli composer outdated
 
 oauth-keys:
-	docker-compose run --rm manager-php-cli mkdir -p var/oauth
-	docker-compose run --rm manager-php-cli openssl genrsa -out var/oauth/private.key 2048
-	docker-compose run --rm manager-php-cli openssl rsa -in var/oauth/private.key -pubout -out var/oauth/public.key
-	docker-compose run --rm manager-php-cli chmod 644 var/oauth/private.key var/oauth/public.key
+	docker-compose run --rm php-cli mkdir -p var/oauth
+	docker-compose run --rm php-cli openssl genrsa -out var/oauth/private.key 2048
+	docker-compose run --rm php-cli openssl rsa -in var/oauth/private.key -pubout -out var/oauth/public.key
+	docker-compose run --rm php-cli chmod 644 var/oauth/private.key var/oauth/public.key
 
 wait-db:
 	until docker-compose exec -T db pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
