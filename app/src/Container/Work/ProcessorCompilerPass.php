@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Container\Work;
 
-use App\Twig\Extension\Work\Processor\ProcessorExtension;
+use App\Twig\Extension\Work\ProcessorExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

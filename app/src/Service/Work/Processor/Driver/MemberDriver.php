@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Twig\Extension\Work\Processor\Driver;
+namespace App\Service\Work\Processor\Driver;
 
 use App\ReadModel\Work\Members\Member\MemberFetcher;
+use App\Service\Work\Processor\Driver\Driver;
 use Twig\Environment;
 
 class MemberDriver implements Driver
