@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\Work\Processor;
 
+use App\Service\Work\Processor\Driver\Driver;
+
 class Processor
 {
     /**
@@ -10,7 +12,7 @@ class Processor
      */
     private $drivers;
 
-    public function __construct(iterable $drivers)
+    public function __construct($drivers)
     {
         $this->drivers = $drivers;
     }

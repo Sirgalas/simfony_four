@@ -11,14 +11,15 @@ use Webmozart\Assert\Assert;
 
 class ProcessorExtension extends AbstractExtension
 {
+
     /**
      * @var Driver[]
      */
-    private $processor;
+    private $drivers;
 
-    public function __construct(Processor $processor)
+    public function __construct(iterable $drivers)
     {
-        $this->processor = $processor;
+        $this->drivers = $drivers;
     }
 
     public function getFilters(): array
@@ -30,6 +31,10 @@ class ProcessorExtension extends AbstractExtension
 
     public function process(?string $text): string
     {
-        return $this->processor->process($text);
+        $result = $text;
+        foreach ($this->drivers as $driver) {
+            $result = $driver->process($result);
+        }
+        return $result;
     }
 }

@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
         <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work.members') }}">Members</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.members.show', {'id': member.id}) }}">{{ user.name.full }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.members.show', {'id': member.id}) }}">{{ member.name.full }}</a></li>
         <li class="breadcrumb-item active">Move</li>
 {% endblock %}
 

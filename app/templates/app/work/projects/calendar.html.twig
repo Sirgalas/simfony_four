@@ -8,7 +8,8 @@
         <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
         {% if project %}
             <li class="breadcrumb-item">
-                <a href="{{ path('work.projects.project.show', {'id': project.id}) }}">{{ project.name }}</a></li>
+                <a href="{{ path('work.projects.project.show', {'id': project.id}) }}">{{ project.name }}</a>
+            </li>
         {% endif %}
         <li class="breadcrumb-item active">Calendar</li>
 {% endblock %}

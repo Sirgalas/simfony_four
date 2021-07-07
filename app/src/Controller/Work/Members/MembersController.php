@@ -29,7 +29,7 @@ use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
  */
 class MembersController extends AbstractController
 {
-    private const PER_PAGE = 20;
+    private const PER_PAGE = 50;
     private ErrorHandler $errors;
 
     public function __construct(ErrorHandler $errors)

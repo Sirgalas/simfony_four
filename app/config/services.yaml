@@ -85,11 +85,16 @@ services:
         resource: '../src/Service/Work/Processor/Driver/*Driver.php'
         tags: [ 'app.twig.work_processor.driver' ]
 
+    App\Service\Work\Processor\Processor:
+        arguments:
+            - !tagged_iterator app.twig.work_processor.driver
+
+    App\Twig\Extension\Work\Processor\ProcessorExtension:
+        arguments:
+            - !tagged_iterator app.twig.work_processor.driver
+
     App\Service\Uploader\FileUploader:
         arguments: [ '@default.storage', '%env(STORAGE_BASE_URL)%' ]
-
-    pp\Service\Work\Processor\Processor:
-        arguments: [ !tagged app.twig.work_processor.driver ]
 
     App\Model\EventDispatcher:
         class: App\Event\Dispatcher\MessengerEventDispatcher

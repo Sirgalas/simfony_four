@@ -40,11 +40,11 @@ class ProjectsController extends AbstractController
         }
 
         /** @var Filter\Filter $filter */
-        $filter = $this->denormalizer->denormalize($request->query->get('filter', []), Filter\Filter::class, 'array', [
+        $filter = $this->denormalizer->denormalize($request->query->all('filter'), Filter\Filter::class, 'array', [
             'object_to_populate' => $filter,
             'ignored_attributes' => ['member'],
         ]);
-
+        dump($filter);
         $pagination = $fetcher->all(
             $filter,
             $request->query->getInt('page', 1),

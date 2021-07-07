@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api\Work\Projects;
 
 use App\Tests\Functional\DbWebTestCase;
+use Symfony\Component\HttpFoundation\InputBag;
 
 class IndexTest extends DbWebTestCase
 {
@@ -20,12 +21,9 @@ class IndexTest extends DbWebTestCase
     {
         $this->client->setServerParameters(IndexFixture::adminCredentials());
         $this->client->request('GET', self::URI . '?filter[name]=Project+Test+Index');
-
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
-
         $data = json_decode($content, true);
-
         self::assertEquals([
             'items' => [
                 [
