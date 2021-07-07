@@ -4,22 +4,18 @@ declare(strict_types=1);
 namespace App\Tests\Functional\OAuth;
 
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class PasswordTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/token';
 
     public function testMethod(): void
     {
         $this->client->request('GET', self::URI);
-        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
-        self::assertJson($content = $this->client->getResponse()->getContent());
-
-        $data = json_decode($content, true);
-
-        self::assertArraySubset([
-            'error' => 'unsupported_grant_type',
-        ], $data);
+        self::assertEquals(405, $this->client->getResponse()->getStatusCode());
     }
 
     public function testSuccess(): void
@@ -62,7 +58,6 @@ class PasswordTest extends DbWebTestCase
             'client_id' => 'oauth',
             'client_secret' => 'secret',
         ]);
-
-        self::assertEquals(401, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }

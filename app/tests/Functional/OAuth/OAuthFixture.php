@@ -12,7 +12,7 @@ use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 use Trikoder\Bundle\OAuth2Bundle\Model\Grant;
 use Trikoder\Bundle\OAuth2Bundle\OAuth2Grants;
 
-class OAuthFixture
+class OAuthFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
