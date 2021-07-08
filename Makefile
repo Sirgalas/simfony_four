@@ -74,6 +74,9 @@ add-entity:
 add-crud:
 	docker-compose run --rm php-cli php bin/console make:crud
 
+api_docs:
+	docker-compose run --rm php-cli php bin/console api:docs
+
 cli:
 	docker-compose run --rm php-cli php bin/console
 

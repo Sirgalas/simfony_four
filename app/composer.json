@@ -65,7 +65,8 @@
         "trikoder/oauth2-bundle": "^3.2",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "webmozart/assert": "^1.10"
+        "webmozart/assert": "^1.10",
+        "zircote/swagger-php": "^3.2"
     },
     "require-dev": {
         "dms/phpunit-arraysubset-asserts": "^0.3.0",
