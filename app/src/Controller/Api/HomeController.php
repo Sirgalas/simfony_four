@@ -28,6 +28,29 @@ use OpenApi\Annotations as OA;
  *         }
  *     )
  * )
+ *  @OA\Schema(
+ *     schema="ErrorModel",
+ *     type="object",
+ *     @OA\Property(property="error", type="object", nullable=true,
+ *         @OA\Property(property="code", type="integer"),
+ *         @OA\Property(property="message", type="string"),
+ *     ),
+ *     @OA\Property(property="violations", type="array", nullable=true, @OA\Items(
+ *         type="object",
+ *         @OA\Property(property="propertyPath", type="string"),
+ *         @OA\Property(property="title", type="string"),
+ *     ))
+ * )
+ * @OA\Schema(
+ *     schema="Pagination",
+ *     type="object",
+ *     @OA\Property(property="count", type="integer"),
+ *     @OA\Property(property="total", type="integer"),
+ *     @OA\Property(property="per_page", type="integer"),
+ *     @OA\Property(property="page", type="integer"),
+ *     @OA\Property(property="pages", type="integer"),
+ * )
+ *
  */
 class HomeController extends AbstractController
 {
